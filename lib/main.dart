@@ -1,16 +1,21 @@
 import 'package:flame/util.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:game_one/game-root.dart';
 
 void main() async {
+  Flame.audio.disableLog();
+
   Util flameUtil = Util();
   await flameUtil.fullScreen();
   await flameUtil.setOrientation(DeviceOrientation.portraitUp);
 
   GameRoot game = GameRoot();
   runApp(game.widget);
+
+  game.init();
 }
 
 /*
