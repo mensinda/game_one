@@ -3,16 +3,27 @@ import 'package:meta/meta.dart';
 
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/components/component.dart';
 
 import 'package:flutter/gestures.dart';
 
+import 'package:ordered_set/ordered_set.dart';
+import 'package:ordered_set/comparing.dart';
+
 import 'package:game_one/model.dart';
+import 'package:game_one/game/player.dart';
 
 class GameRoot extends Game {
   final DataModel model;
+  final int numTilesWidth = 8;
 
   Size screenSize;
   double posX = 0 ;
+  double tileSize = 50;
+
+  Player player;
+
+  OrderedSet<Component> components = OrderedSet(Comparing.on((c) => c.priority()));
 
   GameRoot({@required this.model});
 
@@ -21,6 +32,19 @@ class GameRoot extends Game {
 
     Flame.util.addGestureRecognizer(_createDragRecognizer());
     Flame.util.addGestureRecognizer(_createTapRecognizer());
+
+    await Flame.images.loadAll(<String>[
+      'flame-1.png',
+      'flame-2.png',
+      'flame-3.png',
+      'flame-4.png',
+      'flame-5.png',
+    ]);
+
+    player = Player(relPosY: 1.3);
+    player.setTileSize(tileSize);
+    player.resize(screenSize);
+    components.add(player);
 
     print('INITIALIZED GAME');
     model.setLoaded();
@@ -40,6 +64,7 @@ class GameRoot extends Game {
   }
 
   void reset() {
+    posX = screenSize.width / 2;
     print('RESET GAME');
   }
 
@@ -58,29 +83,23 @@ class GameRoot extends Game {
     bgPaint.color = Color(0xff000000);
     canvas.drawRect(bgRect, bgPaint);
 
-    // Paint the box
-    double screenCenterY = screenSize.height / 2;
-    Rect boxRect = Rect.fromLTWH(
-      posX - 75,
-      screenCenterY - 75,
-      150,
-      150
-    );
-    Paint boxPaint = Paint();
-    boxPaint.color = Color(0xffffffff);
-    canvas.drawRect(boxRect, boxPaint);
+    canvas.save();
+    components.forEach((comp) => comp.render(canvas));
+    canvas.restore();
   }
 
   @override
   void update(double t) {
-    // TODO
-    return;
+    player.posX = posX;
+    components.forEach((c) => c.update(t));
   }
 
   @override
   void resize(Size size) {
     screenSize = size;
-    posX = screenSize.width / 2;
+    tileSize = screenSize.width / numTilesWidth;
+    components.forEach((c) => c.resize(size));
+    player?.setTileSize(tileSize);
     super.resize(size);
   }
 }
