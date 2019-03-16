@@ -13,7 +13,7 @@ class GameRoot extends Game {
     Flame.util.addGestureRecognizer(createDragRecognizer());
     Flame.util.addGestureRecognizer(createTapRecognizer());
 
-    print('INITIALIZED');
+    print('INITIALIZED GAME');
   }
 
   GestureRecognizer createDragRecognizer() {
@@ -36,6 +36,7 @@ class GameRoot extends Game {
   void handleTap(TapUpDetails details) {
   }
 
+  @override
   void render(Canvas canvas) {
     // Paint a black background
     Rect bgRect = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
@@ -56,11 +57,13 @@ class GameRoot extends Game {
     canvas.drawRect(boxRect, boxPaint);
   }
 
+  @override
   void update(double t) {
     // TODO
     return;
   }
 
+  @override
   void resize(Size size) {
     screenSize = size;
     posX = screenSize.width / 2;
