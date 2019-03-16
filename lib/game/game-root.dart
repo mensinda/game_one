@@ -1,32 +1,46 @@
 import 'dart:ui';
+import 'package:meta/meta.dart';
+
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+
 import 'package:flutter/gestures.dart';
 
+import 'package:game_one/model.dart';
+
 class GameRoot extends Game {
+  final DataModel model;
+
   Size screenSize;
   double posX = 0 ;
+
+  GameRoot({@required this.model});
 
   void init() async {
     resize(await Flame.util.initialDimensions());
 
-    Flame.util.addGestureRecognizer(createDragRecognizer());
-    Flame.util.addGestureRecognizer(createTapRecognizer());
+    Flame.util.addGestureRecognizer(_createDragRecognizer());
+    Flame.util.addGestureRecognizer(_createTapRecognizer());
 
     print('INITIALIZED GAME');
+    model.setLoaded();
   }
 
-  GestureRecognizer createDragRecognizer() {
+  GestureRecognizer _createDragRecognizer() {
     PanGestureRecognizer pan = new PanGestureRecognizer();
     pan.onDown   = (DragDownDetails position)   => this.handleDrag(position.globalPosition);
     pan.onUpdate = (DragUpdateDetails position) => this.handleDrag(position.globalPosition);
     return pan;
   }
 
-  TapGestureRecognizer createTapRecognizer() {
+  TapGestureRecognizer _createTapRecognizer() {
     TapGestureRecognizer tapper = new TapGestureRecognizer();
     tapper.onTapUp = (TapUpDetails details) => this.handleTap(details);
     return tapper;
+  }
+
+  void reset() {
+    print('RESET GAME');
   }
 
   void handleDrag(Offset position) {

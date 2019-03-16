@@ -1,8 +1,12 @@
 import 'package:flame/util.dart';
 import 'package:flame/flame.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import 'package:game_one/model.dart';
 import 'package:game_one/game/game-root.dart';
 import 'package:game_one/tabs/play.dart';
 import 'package:game_one/tabs/settings.dart';
@@ -15,18 +19,22 @@ void main() async {
   await flameUtil.fullScreen();
   await flameUtil.setOrientation(DeviceOrientation.portraitUp);
 
-  GameRoot game = GameRoot();
-  runApp(AppRoot(game: game));
+  DataModel model = DataModel();
+  GameRoot game = GameRoot(model: model);
+  runApp(AppRoot(game: game, model: model));
 
   game.init();
 }
 
 class AppRoot extends StatelessWidget {
   final GameRoot game;
-  AppRoot({this.game});
+  final DataModel model;
+  AppRoot({this.game, this.model});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ScopedModel<DataModel>(model: model, child: _buildApp());
+
+  Widget _buildApp() {
     return MaterialApp(
       title: 'game_one',
       theme: ThemeData(
@@ -44,7 +52,9 @@ class AppRoot extends StatelessWidget {
 
 class GameWrapper extends StatelessWidget {
   final GameRoot game;
-  GameWrapper({Key key, this.game}) : super(key: key);
+  GameWrapper({Key key, @required this.game}) : super(key: key) {
+    game.reset();
+  }
 
   @override
   Widget build(BuildContext context) {
