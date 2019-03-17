@@ -56,6 +56,12 @@ class GameRoot extends Game {
       'ground-2.png',
       'ground-3.png',
       'ground-4.png',
+      'wall-1-L.png',
+      'wall-2-L.png',
+      'wall-3-L.png',
+      'wall-1-R.png',
+      'wall-2-R.png',
+      'wall-3-R.png',
     ]);
 
     print('INITIALIZED GAME');
@@ -64,6 +70,7 @@ class GameRoot extends Game {
 
   void reset() {
     posX = screenSize.width / 2;
+    rowsAdded = 0;
 
     // Remove all components
     components.clear();
@@ -90,13 +97,25 @@ class GameRoot extends Game {
     print('GAME RESET');
   }
 
+  GameRow newRow(double nextY) {
+    GameRow row = GameRow(numTiles: numTilesWidth, rand: rand, model: model);
+
+    // Add the row to the game and set its starting position
+    add(row);
+    row.y = nextY;
+
+    // Generate obstacles, etc.
+    row.generate(
+      leftB:  0,
+      rightB: numTilesWidth - 1,
+    );
+
+    return row;
+  }
+
   void fillRows() {
     while ((lastRow?.y ?? 100) > -1) {
-      double nextY = (lastRow?.y ?? screenSize.height) - tileSize;
-      lastRow = GameRow(numTiles: numTilesWidth, rand: rand);
-      add(lastRow);
-      lastRow.generate();
-      lastRow.y = nextY;
+      lastRow = newRow((lastRow?.y ?? screenSize.height) - tileSize);
       rowsAdded++;
     }
   }

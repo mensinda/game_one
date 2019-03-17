@@ -28,6 +28,22 @@ class _SettingsState extends State<Settings> {
                   onChangedEnd: (val) => model.animation.playerSpeed = val
                 ),
 
+                CardSettingsSlider(
+                  label: 'Wall',
+                  initialValue: model.animation.wallSpeed,
+                  min: 0.01,
+                  max: 0.25,
+                  onChangedEnd: (val) => model.animation.wallSpeed = val
+                ),
+
+                CardSettingsSlider(
+                  label: 'Wall animation pause',
+                  initialValue: model.animation.wallPause,
+                  min: 0.1,
+                  max: 0.9,
+                  onChangedEnd: (val) => model.animation.wallPause = val
+                ),
+
               ]
             ),
 

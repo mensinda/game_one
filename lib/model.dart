@@ -5,19 +5,27 @@ class AnimationData {
   static const String PREFIX = 'animation/';
 
   double playerSpeed;
+  double wallSpeed;
+  double wallPause;
 
   AnimationData() { reset(); }
 
   void load(SharedPreferences prefs) async {
     playerSpeed = prefs.getDouble( PREFIX + 'playerSpeed' ) ?? playerSpeed;
+    wallSpeed   = prefs.getDouble( PREFIX + 'wallSpeed'   ) ?? wallSpeed;
+    wallPause   = prefs.getDouble( PREFIX + 'wallPause'   ) ?? wallPause;
   }
 
   void save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerSpeed', playerSpeed );
+    await prefs.setDouble( PREFIX + 'wallSpeed',   wallSpeed );
+    await prefs.setDouble( PREFIX + 'wallPause',   wallPause );
   }
 
   void reset() {
     playerSpeed = 0.05;
+    wallSpeed   = 0.1;
+    wallPause   = 0.5;
   }
 }
 
