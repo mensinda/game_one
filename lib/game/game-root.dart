@@ -41,6 +41,10 @@ class GameRoot extends Game {
       'flame-3.png',
       'flame-4.png',
       'flame-5.png',
+      'ground-1.png',
+      'ground-2.png',
+      'ground-3.png',
+      'ground-4.png',
     ]);
 
     print('INITIALIZED GAME');
