@@ -53,8 +53,12 @@ class GameRoot extends Game {
     // Remove all components
     components.clear();
 
-    // Readd components
-    player = Player(relPosY: 1.3, animationSpeed: 0.05);
+    // Re-add components
+    player = Player(
+      relPosY: model.game.playerRelPos,
+      animationSpeed: model.animation.playerSpeed
+    );
+
     add(player);
 
     print('GAME RESET');

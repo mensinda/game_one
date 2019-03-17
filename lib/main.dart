@@ -23,6 +23,7 @@ void main() async {
   GameRoot game = GameRoot(model: model);
   runApp(AppRoot(game: game, model: model));
 
+  model.load();
   game.init();
 }
 
@@ -45,6 +46,7 @@ class AppRoot extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/':     (BuildContext context) => HomeScreen(title: 'Game One'),
         '/game': (BuildContext context) => GameWrapper(game: game),
+        '/temp': (BuildContext context) => Container(),
       },
     );
   }
