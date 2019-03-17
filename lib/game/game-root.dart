@@ -12,7 +12,7 @@ import 'package:ordered_set/comparing.dart';
 
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
-import 'package:game_one/game/baseComp.dart';
+import 'package:game_one/game/components/base.dart';
 
 class GameRoot extends Game {
   final DataModel model;

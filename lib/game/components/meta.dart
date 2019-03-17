@@ -1,57 +1,9 @@
 import 'dart:ui';
+
+import 'package:game_one/game/components/base.dart';
 import 'package:meta/meta.dart';
-
-import 'package:flame/components/component.dart';
-import 'package:flame/sprite.dart';
-
 import 'package:ordered_set/comparing.dart';
 import 'package:ordered_set/ordered_set.dart';
-
-abstract class BaseComp extends PositionComponent {
-  int xTiles;
-  int yTiles;
-
-  Size size;
-  double tileSize;
-
-  BaseComp({this.xTiles = 1, this.yTiles = 1});
-
-  void updateTileSize(double ts) {
-    this.tileSize = ts;
-    this.width  = xTiles * ts;
-    this.height = yTiles * ts;
-  }
-
-  @override
-  void resize(Size s) {
-    size = s;
-    super.resize(s);
-  }
-}
-
-class GameSprite extends BaseComp {
-  Sprite sprite;
-
-  GameSprite();
-
-  GameSprite.square(int ts, String imagePath)                    : this.rectangle(ts, ts, imagePath);
-  GameSprite.rectangle(int xTiles, int yTiles, String imagePath) : this.fromSprite(xTiles, yTiles, new Sprite(imagePath));
-  GameSprite.fromSprite(int xTiles, int yTiles, this.sprite)     : super(xTiles: xTiles, yTiles: yTiles);
-
-  @override
-  render(Canvas canvas) {
-    prepareCanvas(canvas);
-    sprite.render(canvas, width, height);
-  }
-
-  @override
-  bool loaded() {
-    return sprite != null && sprite.loaded() && x != null && y != null;
-  }
-
-  @override
-  void update(double t) {}
-}
 
 class MetaComp extends BaseComp {
   OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
@@ -69,7 +21,7 @@ class MetaComp extends BaseComp {
   ///
   /// It translates the camera unless hud, call the render method and restore the canvas.
   /// This makes sure the canvas is not messed up by one component and all components render independently.
-  void renderComponent(Canvas canvas, Component c) {
+  void renderComponent(Canvas canvas, BaseComp c) {
     if (!c.loaded()) {
       return;
     }

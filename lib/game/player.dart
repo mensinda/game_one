@@ -1,7 +1,9 @@
 import 'dart:ui';
+
 import 'package:meta/meta.dart';
 
-import 'package:game_one/game/baseComp.dart';
+import 'package:game_one/game/components/meta.dart';
+import 'package:game_one/game/components/sprite.dart';
 
 class Player extends MetaComp {
   double relPosY;
