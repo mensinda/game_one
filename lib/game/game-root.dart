@@ -12,6 +12,7 @@ import 'package:ordered_set/comparing.dart';
 
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
+import 'package:game_one/game/baseComp.dart';
 
 class GameRoot extends Game {
   final DataModel model;
@@ -23,7 +24,7 @@ class GameRoot extends Game {
 
   Player player;
 
-  OrderedSet<Component> components = OrderedSet(Comparing.on((c) => c.priority()));
+  OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
 
   GameRoot({@required this.model});
 
@@ -42,9 +43,7 @@ class GameRoot extends Game {
     ]);
 
     player = Player(relPosY: 1.3);
-    player.setTileSize(tileSize);
-    player.resize(screenSize);
-    components.add(player);
+    add(player);
 
     print('INITIALIZED GAME');
     model.setLoaded();
@@ -84,8 +83,37 @@ class GameRoot extends Game {
     canvas.drawRect(bgRect, bgPaint);
 
     canvas.save();
-    components.forEach((comp) => comp.render(canvas));
+    components.forEach((comp) => renderComponent(canvas, comp));
     canvas.restore();
+  }
+
+  /// This renders a single component obeying BaseGame rules.
+  ///
+  /// It translates the camera unless hud, call the render method and restore the canvas.
+  /// This makes sure the canvas is not messed up by one component and all components render independently.
+  void renderComponent(Canvas canvas, Component c) {
+    if (!c.loaded()) {
+      return;
+    }
+    c.render(canvas);
+    canvas.restore();
+    canvas.save();
+  }
+
+  @mustCallSuper
+  void preAdd(BaseComp c) {
+    // first time resize
+    if (screenSize != null) {
+      c.resize(screenSize);
+    }
+    if (tileSize != null) {
+      c.updateTileSize(tileSize);
+    }
+  }
+
+  void add(BaseComp c) {
+    preAdd(c);
+    components.add(c);
   }
 
   @override
@@ -99,7 +127,7 @@ class GameRoot extends Game {
     screenSize = size;
     tileSize = screenSize.width / numTilesWidth;
     components.forEach((c) => c.resize(size));
-    player?.setTileSize(tileSize);
+    components.forEach((c) => c.updateTileSize(tileSize));
     super.resize(size);
   }
 }
