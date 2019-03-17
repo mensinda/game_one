@@ -8,9 +8,9 @@ class GameSprite extends BaseComp {
 
   GameSprite();
 
-  GameSprite.square(int ts, String imagePath)                    : this.rectangle(ts, ts, imagePath);
-  GameSprite.rectangle(int xTiles, int yTiles, String imagePath) : this.fromSprite(xTiles, yTiles, new Sprite(imagePath));
-  GameSprite.fromSprite(int xTiles, int yTiles, this.sprite)     : super(xTiles: xTiles, yTiles: yTiles);
+  GameSprite.square(double ts, String imagePath)                       : this.rectangle(ts, ts, imagePath);
+  GameSprite.rectangle(double xTiles, double yTiles, String imagePath) : this.fromSprite(xTiles, yTiles, new Sprite(imagePath));
+  GameSprite.fromSprite(double xTiles, double yTiles, this.sprite)     : super(xTiles: xTiles, yTiles: yTiles);
 
   @override
   render(Canvas canvas) {

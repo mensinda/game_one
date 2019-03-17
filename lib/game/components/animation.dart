@@ -8,8 +8,8 @@ class GameAnimation extends BaseComp {
 
   GameAnimation();
 
-  GameAnimation.square(int ts,                    this.animation) : super(xTiles: ts, yTiles: ts);
-  GameAnimation.rectangle(int xTiles, int yTiles, this.animation) : super(xTiles: xTiles, yTiles: yTiles);
+  GameAnimation.square(double ts,                       this.animation) : super(xTiles: ts, yTiles: ts);
+  GameAnimation.rectangle(double xTiles, double yTiles, this.animation) : super(xTiles: xTiles, yTiles: yTiles);
 
   @override
   bool loaded() => animation?.loaded() ?? false;

@@ -30,17 +30,17 @@ class GameRow extends MetaComp {
     for (int i = 0; i < numTiles; i++) {
       if (leftB == i) {
         int tileIDX = rand.nextInt(2) + 1;
-        _generateBoder('wall-$tileIDX-L.png', i);
+        _generateBoder('wall-$tileIDX-L.png', i, 0);
       }
 
       if (rightB == i) {
         int tileIDX = rand.nextInt(2) + 1;
-        _generateBoder('wall-$tileIDX-R.png', i);
+        _generateBoder('wall-$tileIDX-R.png', i, 0.5 * tileSize);
       }
     }
   }
 
-  void _generateBoder(String sprite, int tile) {
+  void _generateBoder(String sprite, int tile, double offset) {
     Animation ani = Animation.variableSequenced(
       sprite,
       11,
@@ -61,10 +61,10 @@ class GameRow extends MetaComp {
       textureWidth:  64,
     );
 
-    GameAnimation border = GameAnimation.square(1, ani);
+    GameAnimation border = GameAnimation.rectangle(0.5, 1, ani);
     add(border);
 
-    border.x            = tile * tileSize;
+    border.x            = tile * tileSize + offset;
     border.y            = 0;
     border.compPriority = 5;
   }

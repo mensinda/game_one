@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flame/components/component.dart';
 
 abstract class BaseComp extends PositionComponent {
-  int xTiles;
-  int yTiles;
+  double xTiles;
+  double yTiles;
   int compPriority = 0;
   double speed = 0;
 
