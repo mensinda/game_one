@@ -35,6 +35,7 @@ class GameRoot extends Game {
     Flame.util.addGestureRecognizer(_createTapRecognizer());
 
     await Flame.images.loadAll(<String>[
+      'flame.png',
       'flame-1.png',
       'flame-2.png',
       'flame-3.png',
@@ -42,29 +43,21 @@ class GameRoot extends Game {
       'flame-5.png',
     ]);
 
-    player = Player(relPosY: 1.3);
-    add(player);
-
     print('INITIALIZED GAME');
     model.setLoaded();
   }
 
-  GestureRecognizer _createDragRecognizer() {
-    PanGestureRecognizer pan = new PanGestureRecognizer();
-    pan.onDown   = (DragDownDetails position)   => this.handleDrag(position.globalPosition);
-    pan.onUpdate = (DragUpdateDetails position) => this.handleDrag(position.globalPosition);
-    return pan;
-  }
-
-  TapGestureRecognizer _createTapRecognizer() {
-    TapGestureRecognizer tapper = new TapGestureRecognizer();
-    tapper.onTapUp = (TapUpDetails details) => this.handleTap(details);
-    return tapper;
-  }
-
   void reset() {
     posX = screenSize.width / 2;
-    print('RESET GAME');
+
+    // Remove all components
+    components.clear();
+
+    // Readd components
+    player = Player(relPosY: 1.3, animationSpeed: 0.05);
+    add(player);
+
+    print('GAME RESET');
   }
 
   void handleDrag(Offset position) {
@@ -129,5 +122,19 @@ class GameRoot extends Game {
     components.forEach((c) => c.resize(size));
     components.forEach((c) => c.updateTileSize(tileSize));
     super.resize(size);
+  }
+
+
+  GestureRecognizer _createDragRecognizer() {
+    PanGestureRecognizer pan = new PanGestureRecognizer();
+    pan.onDown   = (DragDownDetails position)   => this.handleDrag(position.globalPosition);
+    pan.onUpdate = (DragUpdateDetails position) => this.handleDrag(position.globalPosition);
+    return pan;
+  }
+
+  TapGestureRecognizer _createTapRecognizer() {
+    TapGestureRecognizer tapper = new TapGestureRecognizer();
+    tapper.onTapUp = (TapUpDetails details) => this.handleTap(details);
+    return tapper;
   }
 }
