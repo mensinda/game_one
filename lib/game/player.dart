@@ -23,6 +23,9 @@ class Player extends MetaComp {
         )
       )
     );
+
+    // Always draw the player last
+    compPriority = 10;
   }
 
   set posX(double x) => this.x = x - this.width / 2;

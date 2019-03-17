@@ -9,11 +9,11 @@ class AnimationData {
   AnimationData() { reset(); }
 
   void load(SharedPreferences prefs) async {
-    playerSpeed = prefs.getDouble(PREFIX + 'playerSpeed') ?? playerSpeed;
+    playerSpeed = prefs.getDouble( PREFIX + 'playerSpeed' ) ?? playerSpeed;
   }
 
   void save(SharedPreferences prefs) async {
-    await prefs.setDouble('playerSpeed', playerSpeed);
+    await prefs.setDouble( PREFIX + 'playerSpeed', playerSpeed );
   }
 
   void reset() {
@@ -25,19 +25,27 @@ class GameSettings {
   static const String PREFIX = 'game/';
 
   double playerRelPos;
+  double gameSpeed;
+  bool   debugText;
 
   GameSettings() { reset(); }
 
   void load(SharedPreferences prefs) async {
-    playerRelPos = prefs.getDouble(PREFIX + 'playerRelPos') ?? playerRelPos;
+    playerRelPos = prefs.getDouble( PREFIX + 'playerRelPos' ) ?? playerRelPos;
+    gameSpeed    = prefs.getDouble( PREFIX + 'gameSpeed'    ) ?? gameSpeed;
+    debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
   }
 
   void save(SharedPreferences prefs) async {
-    await prefs.setDouble('playerRelPos', playerRelPos);
+    await prefs.setDouble( PREFIX + 'playerRelPos', playerRelPos );
+    await prefs.setDouble( PREFIX + 'gameSpeed',    gameSpeed    );
+    await prefs.setBool(   PREFIX + 'debugText',    debugText    );
   }
 
   void reset() {
     playerRelPos = 1.3;
+    gameSpeed    = 200;
+    debugText    = false;
   }
 }
 

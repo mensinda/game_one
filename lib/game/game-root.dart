@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:meta/meta.dart';
 
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/text_config.dart';
 import 'package:flame/components/component.dart';
 
 import 'package:flutter/gestures.dart';
@@ -12,17 +14,24 @@ import 'package:ordered_set/comparing.dart';
 
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
+import 'package:game_one/game/row.dart';
+import 'package:game_one/game/components/text.dart';
 import 'package:game_one/game/components/base.dart';
 
 class GameRoot extends Game {
   final DataModel model;
   final int numTilesWidth = 8;
 
+  Random rand;
   Size screenSize;
   double posX = 0 ;
   double tileSize = 50;
+  int rowsAdded = 0;
 
   Player player;
+  GameRow lastRow;
+
+  GameText rowDebugText;
 
   OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
 
@@ -33,6 +42,8 @@ class GameRoot extends Game {
 
     Flame.util.addGestureRecognizer(_createDragRecognizer());
     Flame.util.addGestureRecognizer(_createTapRecognizer());
+
+    rand = Random();
 
     await Flame.images.loadAll(<String>[
       'flame.png',
@@ -56,6 +67,16 @@ class GameRoot extends Game {
 
     // Remove all components
     components.clear();
+    lastRow = null;
+    if (model.game.debugText) {
+      rowDebugText = GameText('<N/A>');
+      add(rowDebugText);
+      rowDebugText.compPriority = 50;
+      rowDebugText.config = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
+      print('Enabling debug text');
+    } else {
+      rowDebugText = null;
+    }
 
     // Re-add components
     player = Player(
@@ -64,15 +85,20 @@ class GameRoot extends Game {
     );
 
     add(player);
+    fillRows();
 
     print('GAME RESET');
   }
 
-  void handleDrag(Offset position) {
-    posX = position.dx;
-  }
-
-  void handleTap(TapUpDetails details) {
+  void fillRows() {
+    while ((lastRow?.y ?? 100) > -1) {
+      double nextY = (lastRow?.y ?? screenSize.height) - tileSize;
+      lastRow = GameRow(numTiles: numTilesWidth, rand: rand);
+      add(lastRow);
+      lastRow.generate();
+      lastRow.y = nextY;
+      rowsAdded++;
+    }
   }
 
   @override
@@ -110,6 +136,7 @@ class GameRoot extends Game {
     if (tileSize != null) {
       c.updateTileSize(tileSize);
     }
+    c.updateSpeed(model.game.gameSpeed);
   }
 
   void add(BaseComp c) {
@@ -121,6 +148,10 @@ class GameRoot extends Game {
   void update(double t) {
     player.posX = posX;
     components.forEach((c) => c.update(t));
+    components.removeWhere((c) => c.destroy());
+    fillRows();
+
+    rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded';
   }
 
   @override
@@ -133,6 +164,16 @@ class GameRoot extends Game {
   }
 
 
+  // Input handlers
+  void handleDrag(Offset position) {
+    posX = position.dx;
+  }
+
+  void handleTap(TapUpDetails details) {
+  }
+
+
+  // Util functions
   GestureRecognizer _createDragRecognizer() {
     PanGestureRecognizer pan = new PanGestureRecognizer();
     pan.onDown   = (DragDownDetails position)   => this.handleDrag(position.globalPosition);

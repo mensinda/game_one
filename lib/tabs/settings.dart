@@ -42,7 +42,29 @@ class _SettingsState extends State<Settings> {
                   min: 1.05,
                   max: 2.5,
                   onChangedEnd: (val) => model.game.playerRelPos = val,
-                )
+                ),
+
+                CardSettingsSlider(
+                  label: 'Game speed',
+                  initialValue: model.game.gameSpeed,
+                  min: 5,
+                  max: 500,
+                  onChangedEnd: (val) => model.game.gameSpeed = val,
+                ),
+
+              ]
+            ),
+
+            // Debug settings
+            CardSettingsSection(
+              header: CardSettingsHeader(label: 'Debug settings'),
+              children: <Widget>[
+
+                CardSettingsSwitch(
+                  label: 'Debug text',
+                  initialValue: model.game.debugText,
+                  onChanged: (val) => model.game.debugText = val,
+                ),
 
               ]
             ),

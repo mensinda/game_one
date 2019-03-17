@@ -5,6 +5,8 @@ import 'package:flame/components/component.dart';
 abstract class BaseComp extends PositionComponent {
   int xTiles;
   int yTiles;
+  int compPriority = 0;
+  double speed = 0;
 
   Size size;
   double tileSize;
@@ -17,10 +19,17 @@ abstract class BaseComp extends PositionComponent {
     this.height = yTiles * ts;
   }
 
+  void updateSpeed(double s) {
+    speed = s;
+  }
+
   @override
   void resize(Size s) {
     size = s;
     super.resize(s);
   }
+
+  @override
+  int priority() => compPriority;
 }
 

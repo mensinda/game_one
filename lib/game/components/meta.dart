@@ -39,6 +39,9 @@ class MetaComp extends BaseComp {
     if (tileSize != null) {
       c.updateTileSize(tileSize);
     }
+    if (speed != null) {
+      c.updateSpeed(speed);
+    }
   }
 
   void add(BaseComp c) {
@@ -65,6 +68,12 @@ class MetaComp extends BaseComp {
   void updateTileSize(double ts) {
     super.updateTileSize(ts);
     components.forEach((comp) => comp.updateTileSize(ts));
+  }
+
+  @override
+  void updateSpeed(double s) {
+    super.updateSpeed(s);
+    components.forEach((comp) => comp.updateSpeed(s));
   }
 
   @override
