@@ -7,16 +7,15 @@ import 'package:game_one/game/components/sprite.dart';
 import 'package:game_one/model.dart';
 
 class GameRow extends MetaComp {
-  final int numTiles;
   final Random rand;
 
   final DataModel model;
 
-  GameRow({this.numTiles, this.rand, this.model});
+  GameRow({this.rand, this.model});
 
   void generate({int leftB, int rightB}) {
     // Generate the background tiles
-    for (int i = 0; i < numTiles; i++) {
+    for (int i = 0; i < model.game.numTiles; i++) {
       int tileIDX = rand.nextInt(3) + 1;
       GameSprite sp = GameSprite.square(1, 'ground-$tileIDX.png');
       add(sp);
@@ -27,7 +26,7 @@ class GameRow extends MetaComp {
     }
 
     // Generate the border
-    for (int i = 0; i < numTiles; i++) {
+    for (int i = 0; i < model.game.numTiles; i++) {
       if (leftB == i) {
         int tileIDX = rand.nextInt(2) + 1;
         _generateBoder('wall-$tileIDX-L.png', i, 0);

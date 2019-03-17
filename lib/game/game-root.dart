@@ -20,7 +20,6 @@ import 'package:game_one/game/components/base.dart';
 
 class GameRoot extends Game {
   final DataModel model;
-  final int numTilesWidth = 8;
 
   Random rand;
   Size screenSize;
@@ -72,6 +71,8 @@ class GameRoot extends Game {
     posX = screenSize.width / 2;
     rowsAdded = 0;
 
+    resize(screenSize);
+
     // Remove all components
     components.clear();
     lastRow = null;
@@ -98,7 +99,7 @@ class GameRoot extends Game {
   }
 
   GameRow newRow(double nextY) {
-    GameRow row = GameRow(numTiles: numTilesWidth, rand: rand, model: model);
+    GameRow row = GameRow(rand: rand, model: model);
 
     // Add the row to the game and set its starting position
     add(row);
@@ -107,7 +108,7 @@ class GameRoot extends Game {
     // Generate obstacles, etc.
     row.generate(
       leftB:  0,
-      rightB: numTilesWidth - 1,
+      rightB: model.game.numTiles - 1,
     );
 
     return row;
@@ -176,7 +177,7 @@ class GameRoot extends Game {
   @override
   void resize(Size size) {
     screenSize = size;
-    tileSize = screenSize.width / numTilesWidth;
+    tileSize = screenSize.width / model.game.numTiles;
     components.forEach((c) => c.resize(size));
     components.forEach((c) => c.updateTileSize(tileSize));
     super.resize(size);

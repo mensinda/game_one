@@ -34,6 +34,7 @@ class GameSettings {
 
   double playerRelPos;
   double gameSpeed;
+  int    numTiles;
   bool   debugText;
 
   GameSettings() { reset(); }
@@ -41,18 +42,21 @@ class GameSettings {
   void load(SharedPreferences prefs) async {
     playerRelPos = prefs.getDouble( PREFIX + 'playerRelPos' ) ?? playerRelPos;
     gameSpeed    = prefs.getDouble( PREFIX + 'gameSpeed'    ) ?? gameSpeed;
+    numTiles     = prefs.getInt(    PREFIX + 'numTiles'     ) ?? numTiles;
     debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
   }
 
   void save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerRelPos', playerRelPos );
     await prefs.setDouble( PREFIX + 'gameSpeed',    gameSpeed    );
+    await prefs.setInt(    PREFIX + 'numTiles',     numTiles     );
     await prefs.setBool(   PREFIX + 'debugText',    debugText    );
   }
 
   void reset() {
     playerRelPos = 1.3;
     gameSpeed    = 200;
+    numTiles     = 6;
     debugText    = false;
   }
 }

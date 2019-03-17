@@ -68,6 +68,12 @@ class _SettingsState extends State<Settings> {
                   onChangedEnd: (val) => model.game.gameSpeed = val,
                 ),
 
+                CardSettingsInt(
+                  label: 'Number of game tiles',
+                  initialValue: model.game.numTiles,
+                  onChanged: (val) => model.game.numTiles = val,
+                ),
+
               ]
             ),
 
