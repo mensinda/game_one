@@ -8,7 +8,7 @@ abstract class BaseComp extends PositionComponent {
   int compPriority = 0;
   double speed = 0;
 
-  Size size;
+  Size screenSize;
   double tileSize;
 
   Rect  hitBox;
@@ -30,7 +30,7 @@ abstract class BaseComp extends PositionComponent {
 
   @override
   void resize(Size s) {
-    size = s;
+    screenSize = s;
     super.resize(s);
   }
 

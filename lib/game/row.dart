@@ -42,7 +42,7 @@ class GameRow extends MetaComp {
     }
 
     // Generate the hit box
-    hitBox = Rect.fromLTWH(0, this.y, size.height, tileSize);
+    hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
   }
 
   void _generateBoder(String sprite, int tile, double offset) {
@@ -87,8 +87,6 @@ class GameRow extends MetaComp {
   }
 
   @override
-  bool destroy() {
-    return y > size.height;
-  }
+  bool destroy() => y > screenSize.height;
 }
 

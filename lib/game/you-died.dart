@@ -48,8 +48,8 @@ class YouDied extends MetaComp {
     anim   = Animation(frames, loop: false);
     sprite = GameAnimation.rectangle(5, 4.5, anim);
     add(sprite);
-    sprite.x = size.width  / 2 - sprite.width  / 2;
-    sprite.y = size.height / 2 - sprite.height / 1.5;
+    sprite.x = screenSize.width  / 2 - sprite.width  / 2;
+    sprite.y = screenSize.height / 2 - sprite.height / 1.5;
   }
 
   void _tapToRestart() {
@@ -66,7 +66,7 @@ class YouDied extends MetaComp {
     );
 
     add(restart);
-    restart.x = size.width / 2 - restart.width / 2;
+    restart.x = screenSize.width / 2 - restart.width / 2;
     restart.y = sprite.toRect().bottom + restart.height;
   }
 
