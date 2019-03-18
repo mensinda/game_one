@@ -51,11 +51,32 @@ class MetaComp extends BaseComp {
 
   @override
   bool loaded() {
-    if (x == null || y == null) {
+    if (x == null || y == null || components.isEmpty) {
       return false;
     }
 
     return components.map((comp) => comp.loaded()).reduce((val, comp) => val && comp);
+  }
+
+  @override
+  bool intersect(BaseComp comp) {
+    bool res = super.intersect(comp);
+    if (!res || components.isEmpty) {
+      components.forEach((c) => c.lastWasHit = false);
+      return false;
+    }
+
+    return components.map((c) => c.intersect(comp)).reduce((val, c) => val || c);
+  }
+
+  @override
+  void renderHitBox(Canvas canvas) {
+    if (hitBox == null) {
+      return;
+    }
+
+    super.renderHitBox(canvas);
+    components.forEach((comp) => comp.renderHitBox(canvas));
   }
 
   @override

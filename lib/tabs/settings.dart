@@ -88,6 +88,12 @@ class _SettingsState extends State<Settings> {
                   onChanged: (val) => model.game.debugText = val,
                 ),
 
+                CardSettingsSwitch(
+                  label: 'Render hit box',
+                  initialValue: model.game.renderHitBox,
+                  onChanged: (val) => model.game.renderHitBox = val,
+                ),
+
               ]
             ),
 

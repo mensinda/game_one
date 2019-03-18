@@ -24,8 +24,8 @@ class AnimationData {
 
   void reset() {
     playerSpeed = 0.05;
-    wallSpeed   = 0.1;
-    wallPause   = 0.5;
+    wallSpeed   = 0.05;
+    wallPause   = 0.40;
   }
 }
 
@@ -36,6 +36,7 @@ class GameSettings {
   double gameSpeed;
   int    numTiles;
   bool   debugText;
+  bool   renderHitBox;
 
   GameSettings() { reset(); }
 
@@ -44,6 +45,7 @@ class GameSettings {
     gameSpeed    = prefs.getDouble( PREFIX + 'gameSpeed'    ) ?? gameSpeed;
     numTiles     = prefs.getInt(    PREFIX + 'numTiles'     ) ?? numTiles;
     debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
+    renderHitBox = prefs.getBool(   PREFIX + 'renderHitBox' ) ?? renderHitBox;
   }
 
   void save(SharedPreferences prefs) async {
@@ -51,6 +53,7 @@ class GameSettings {
     await prefs.setDouble( PREFIX + 'gameSpeed',    gameSpeed    );
     await prefs.setInt(    PREFIX + 'numTiles',     numTiles     );
     await prefs.setBool(   PREFIX + 'debugText',    debugText    );
+    await prefs.setBool(   PREFIX + 'renderHitBox', renderHitBox );
   }
 
   void reset() {
@@ -58,6 +61,7 @@ class GameSettings {
     gameSpeed    = 200;
     numTiles     = 6;
     debugText    = false;
+    renderHitBox = false;
   }
 }
 

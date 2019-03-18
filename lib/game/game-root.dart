@@ -26,6 +26,7 @@ class GameRoot extends Game {
   double posX = 0 ;
   double tileSize = 50;
   int rowsAdded = 0;
+  bool hasLost = false;
 
   Player player;
   GameRow lastRow;
@@ -70,6 +71,7 @@ class GameRoot extends Game {
   void reset() {
     posX = screenSize.width / 2;
     rowsAdded = 0;
+    hasLost = false;
 
     resize(screenSize);
 
@@ -100,13 +102,10 @@ class GameRoot extends Game {
 
   GameRow newRow(double nextY) {
     GameRow row = GameRow(rand: rand, model: model);
-
-    // Add the row to the game and set its starting position
     add(row);
-    row.y = nextY;
 
-    // Generate obstacles, etc.
     row.generate(
+      top:    nextY,
       leftB:  0,
       rightB: model.game.numTiles - 1,
     );
@@ -123,22 +122,20 @@ class GameRoot extends Game {
 
   @override
   void render(Canvas canvas) {
-    // Paint a black background
-    Rect bgRect = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
-    Paint bgPaint = Paint();
-    bgPaint.color = Color(0xff000000);
-    canvas.drawRect(bgRect, bgPaint);
-
     canvas.save();
     components.forEach((comp) => renderComponent(canvas, comp));
     canvas.restore();
+
+    if (model.game.renderHitBox) {
+      components.forEach((comp) => comp.renderHitBox(canvas));
+    }
   }
 
   /// This renders a single component obeying BaseGame rules.
   ///
   /// It translates the camera unless hud, call the render method and restore the canvas.
   /// This makes sure the canvas is not messed up by one component and all components render independently.
-  void renderComponent(Canvas canvas, Component c) {
+  void renderComponent(Canvas canvas, BaseComp c) {
     if (!c.loaded()) {
       return;
     }
@@ -166,12 +163,33 @@ class GameRoot extends Game {
 
   @override
   void update(double t) {
+    if (hasLost) {
+      _updateLost(t);
+    } else {
+      _updateRunning(t);
+    }
+  }
+
+  void _updateRunning(double t) {
     player.posX = posX;
     components.forEach((c) => c.update(t));
     components.removeWhere((c) => c.destroy());
     fillRows();
 
-    rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded';
+    bool wasHit = components.map((comp) => comp.intersect(player)).reduce((val, comp) => val || comp);
+    rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded; HIT: $wasHit';
+
+    if (wasHit) {
+      print('You are dead!');
+      player.hitBoxColor = Color(0xffffffff);
+      hasLost = true;
+
+      player.die();
+    }
+  }
+
+  void _updateLost(double t) {
+    player.update(t);
   }
 
   @override

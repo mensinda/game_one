@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/animation.dart';
 import 'package:game_one/game/components/animation.dart';
@@ -13,7 +14,9 @@ class GameRow extends MetaComp {
 
   GameRow({this.rand, this.model});
 
-  void generate({int leftB, int rightB}) {
+  void generate({double top, int leftB, int rightB}) {
+    this.y = top;
+
     // Generate the background tiles
     for (int i = 0; i < model.game.numTiles; i++) {
       int tileIDX = rand.nextInt(3) + 1;
@@ -37,6 +40,9 @@ class GameRow extends MetaComp {
         _generateBoder('wall-$tileIDX-R.png', i, 0.5 * tileSize);
       }
     }
+
+    // Generate the hit box
+    hitBox = Rect.fromLTWH(0, this.y, size.height, tileSize);
   }
 
   void _generateBoder(String sprite, int tile, double offset) {
@@ -66,13 +72,18 @@ class GameRow extends MetaComp {
     border.x            = tile * tileSize + offset;
     border.y            = 0;
     border.compPriority = 5;
+    border.hitBox       = Rect.fromLTWH(border.x, this.y, border.width, border.height);
   }
 
   @override
   void update(double t) {
     super.update(t);
 
-    y += t * (speed ?? 0);
+    double deltaY = t * (speed ?? 0);
+    y            += deltaY;
+    hitBox        = hitBox.translate(0, deltaY);
+
+    components.forEach((comp) => comp.hitBox = comp.hitBox?.translate(0, deltaY));
   }
 
   @override
