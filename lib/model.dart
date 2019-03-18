@@ -7,6 +7,8 @@ class AnimationData {
   double playerSpeed;
   double wallSpeed;
   double wallPause;
+  double deathScreen;
+  double tap2restart;
 
   AnimationData() { reset(); }
 
@@ -14,18 +16,24 @@ class AnimationData {
     playerSpeed = prefs.getDouble( PREFIX + 'playerSpeed' ) ?? playerSpeed;
     wallSpeed   = prefs.getDouble( PREFIX + 'wallSpeed'   ) ?? wallSpeed;
     wallPause   = prefs.getDouble( PREFIX + 'wallPause'   ) ?? wallPause;
+    deathScreen = prefs.getDouble( PREFIX + 'deathScreen' ) ?? deathScreen;
+    tap2restart = prefs.getDouble( PREFIX + 'tap2restart' ) ?? tap2restart;
   }
 
   void save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerSpeed', playerSpeed );
     await prefs.setDouble( PREFIX + 'wallSpeed',   wallSpeed );
     await prefs.setDouble( PREFIX + 'wallPause',   wallPause );
+    await prefs.setDouble( PREFIX + 'deathScreen', deathScreen );
+    await prefs.setDouble( PREFIX + 'tap2restart', tap2restart );
   }
 
   void reset() {
     playerSpeed = 0.05;
     wallSpeed   = 0.05;
     wallPause   = 0.40;
+    deathScreen = 0.09;
+    tap2restart = 1.00;
   }
 }
 

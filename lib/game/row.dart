@@ -19,7 +19,7 @@ class GameRow extends MetaComp {
 
     // Generate the background tiles
     for (int i = 0; i < model.game.numTiles; i++) {
-      int tileIDX = rand.nextInt(3) + 1;
+      int tileIDX = rand.nextInt(4);
       GameSprite sp = GameSprite.square(1, 'ground-$tileIDX.png');
       add(sp);
 
@@ -31,12 +31,12 @@ class GameRow extends MetaComp {
     // Generate the border
     for (int i = 0; i < model.game.numTiles; i++) {
       if (leftB == i) {
-        int tileIDX = rand.nextInt(2) + 1;
+        int tileIDX = rand.nextInt(3);
         _generateBoder('wall-$tileIDX-L.png', i, 0);
       }
 
       if (rightB == i) {
-        int tileIDX = rand.nextInt(2) + 1;
+        int tileIDX = rand.nextInt(3);
         _generateBoder('wall-$tileIDX-R.png', i, 0.5 * tileSize);
       }
     }

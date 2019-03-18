@@ -60,7 +60,14 @@ class GameWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return game.widget;
+    return GestureDetector(
+      onTapUp:     (TapUpDetails ev)      => game.handleTap(ev.globalPosition),
+      onPanDown:   (DragDownDetails ev)   => game.handleDrag(ev.globalPosition),
+      onPanUpdate: (DragUpdateDetails ev) => game.handleDrag(ev.globalPosition),
+
+      behavior: HitTestBehavior.opaque,
+      child:    game.widget,
+    );
   }
 }
 

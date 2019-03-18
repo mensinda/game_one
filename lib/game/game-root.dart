@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/text_config.dart';
-import 'package:flame/components/component.dart';
 
 import 'package:flutter/gestures.dart';
 
@@ -15,6 +14,7 @@ import 'package:ordered_set/comparing.dart';
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
 import 'package:game_one/game/row.dart';
+import 'package:game_one/game/you-died.dart';
 import 'package:game_one/game/components/text.dart';
 import 'package:game_one/game/components/base.dart';
 
@@ -30,6 +30,7 @@ class GameRoot extends Game {
 
   Player player;
   GameRow lastRow;
+  YouDied deathScreen;
 
   GameText rowDebugText;
 
@@ -40,28 +41,31 @@ class GameRoot extends Game {
   void init() async {
     resize(await Flame.util.initialDimensions());
 
-    Flame.util.addGestureRecognizer(_createDragRecognizer());
-    Flame.util.addGestureRecognizer(_createTapRecognizer());
-
     rand = Random();
 
     await Flame.images.loadAll(<String>[
       'flame.png',
-      'flame-1.png',
-      'flame-2.png',
-      'flame-3.png',
-      'flame-4.png',
-      'flame-5.png',
+      'ground-0.png',
       'ground-1.png',
       'ground-2.png',
       'ground-3.png',
-      'ground-4.png',
+      'wall-0-L.png',
       'wall-1-L.png',
       'wall-2-L.png',
-      'wall-3-L.png',
+      'wall-0-R.png',
       'wall-1-R.png',
       'wall-2-R.png',
-      'wall-3-R.png',
+      'death-screen-10.png',
+      'death-screen-20.png',
+      'death-screen-30.png',
+      'death-screen-40.png',
+      'death-screen-50.png',
+      'death-screen-60.png',
+      'death-screen-70.png',
+      'death-screen-80.png',
+      'death-screen-90.png',
+      'death-screen-100.png',
+      'restart.png',
     ]);
 
     print('INITIALIZED GAME');
@@ -72,6 +76,7 @@ class GameRoot extends Game {
     posX = screenSize.width / 2;
     rowsAdded = 0;
     hasLost = false;
+    deathScreen = null;
 
     resize(screenSize);
 
@@ -185,11 +190,15 @@ class GameRoot extends Game {
       hasLost = true;
 
       player.die();
+      deathScreen = YouDied(model: this.model);
+      add(deathScreen);
+      deathScreen.init();
     }
   }
 
   void _updateLost(double t) {
     player.update(t);
+    deathScreen.update(t);
   }
 
   @override
@@ -207,21 +216,9 @@ class GameRoot extends Game {
     posX = position.dx;
   }
 
-  void handleTap(TapUpDetails details) {
-  }
-
-
-  // Util functions
-  GestureRecognizer _createDragRecognizer() {
-    PanGestureRecognizer pan = new PanGestureRecognizer();
-    pan.onDown   = (DragDownDetails position)   => this.handleDrag(position.globalPosition);
-    pan.onUpdate = (DragUpdateDetails position) => this.handleDrag(position.globalPosition);
-    return pan;
-  }
-
-  TapGestureRecognizer _createTapRecognizer() {
-    TapGestureRecognizer tapper = new TapGestureRecognizer();
-    tapper.onTapUp = (TapUpDetails details) => this.handleTap(details);
-    return tapper;
+  void handleTap(Offset position) {
+    if (deathScreen?.canRestart ?? false) {
+      reset();
+    }
   }
 }

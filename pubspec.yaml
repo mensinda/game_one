@@ -39,19 +39,25 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/flame.png
-    - assets/images/flame-1.png
-    - assets/images/flame-2.png
-    - assets/images/flame-3.png
-    - assets/images/flame-4.png
-    - assets/images/flame-5.png
+    - assets/images/ground-0.png
     - assets/images/ground-1.png
     - assets/images/ground-2.png
     - assets/images/ground-3.png
-    - assets/images/ground-4.png
+    - assets/images/wall-0-L.png
     - assets/images/wall-1-L.png
     - assets/images/wall-2-L.png
-    - assets/images/wall-3-L.png
+    - assets/images/wall-0-R.png
     - assets/images/wall-1-R.png
     - assets/images/wall-2-R.png
-    - assets/images/wall-3-R.png
+    - assets/images/death-screen-10.png
+    - assets/images/death-screen-20.png
+    - assets/images/death-screen-30.png
+    - assets/images/death-screen-40.png
+    - assets/images/death-screen-50.png
+    - assets/images/death-screen-60.png
+    - assets/images/death-screen-70.png
+    - assets/images/death-screen-80.png
+    - assets/images/death-screen-90.png
+    - assets/images/death-screen-100.png
+    - assets/images/restart.png
 

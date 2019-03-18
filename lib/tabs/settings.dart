@@ -44,6 +44,22 @@ class _SettingsState extends State<Settings> {
                   onChangedEnd: (val) => model.animation.wallPause = val
                 ),
 
+                CardSettingsSlider(
+                  label: 'Death screen speed',
+                  initialValue: model.animation.deathScreen,
+                  min: 0.01,
+                  max: 0.25,
+                  onChangedEnd: (val) => model.animation.deathScreen = val
+                ),
+
+                CardSettingsSlider(
+                  label: 'Tab to restart blink speed',
+                  initialValue: model.animation.tap2restart,
+                  min: 0.3,
+                  max: 1.9,
+                  onChangedEnd: (val) => model.animation.tap2restart = val
+                ),
+
               ]
             ),
 
