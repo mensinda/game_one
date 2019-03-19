@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:game_one/model.dart';
-import 'package:game_one/game/game-root.dart';
+import 'package:game_one/game/gameRoot.dart';
 import 'package:game_one/tabs/settings.dart';
 import 'package:game_one/tabs/bluetooth.dart';
 
