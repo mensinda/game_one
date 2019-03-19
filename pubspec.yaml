@@ -48,9 +48,16 @@ flutter:
     - assets/images/wall-0-R.png
     - assets/images/wall-1-R.png
     - assets/images/wall-2-R.png
+    - assets/images/wall-0-U.png
+    - assets/images/wall-1-U.png
+    - assets/images/wall-2-U.png
     - assets/images/wall-0-D.png
     - assets/images/wall-1-D.png
     - assets/images/wall-2-D.png
+    - assets/images/block-0.png
+    - assets/images/block-1.png
+    - assets/images/block-2.png
+    - assets/images/block-3.png
     - assets/images/death-screen-10.png
     - assets/images/death-screen-20.png
     - assets/images/death-screen-30.png

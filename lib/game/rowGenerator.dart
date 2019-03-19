@@ -20,15 +20,18 @@ class RowGenerator extends MetaComp {
     GameRow row   = GameRow(rand: rand, model: model);
     add(row);
 
-    int leftBorderAt  = 0;
+    int leftBorderAt  = 1;
     int rightBorderAt = model.game.numTiles - 1;
 
     List<TileType> tiles = <TileType>[];
 
+    // Generate tile list
     for (int i = 0; i < model.game.numTiles; i++) {
       TileType newTile = TileType.empty;
+      if (i <  leftBorderAt)  { newTile = TileType.block; }
       if (i == leftBorderAt)  { newTile = TileType.borderL; }
       if (i == rightBorderAt) { newTile = TileType.borderR; }
+      if (i >  rightBorderAt) { newTile = TileType.block; }
 
       tiles.add(newTile);
     }

@@ -59,17 +59,43 @@ class GameRow extends MetaComp {
     // Generate the forground tiles
     for (int i = 0; i < tiles.length; i++) {
       TileType current = tiles[i];
-      if (current == TileType.empty || current == TileType.block) {
+      if (current == TileType.empty) {
         continue;
       }
 
-      TileCfg tile;
       switch (current) {
+        case TileType.block:   _generateBlock(i); break;
+        case TileType.borderL:
+        case TileType.borderR:
+        case TileType.borderU:
+        case TileType.borderD: _generateBorder(current, i); break;
+        case TileType.empty:
+        default: break;
+      }
+
+    }
+
+    // Generate the hit box
+    hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
+  }
+
+  void _generateBlock(int tileIdx) {
+    GameSprite sp = GameSprite.square(1, 'block-${this.rand.nextInt(4)}.png');
+    add(sp);
+    sp.x            = tileIdx * tileSize;
+    sp.y            = 0;
+    sp.compPriority = 5;
+    sp.hitBox       = Rect.fromLTWH(sp.x, this.y, sp.width, sp.height);
+  }
+
+  void _generateBorder(TileType current, int tileIdx) {
+    TileCfg tile;
+    switch (current) {
         case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
         case TileType.borderR: tile = TileCfg(d: 'R', w: 0.5, h: 1.0, o: 0.5); break;
         case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.0); break;
         case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.5); break;
-        default: continue;
+        default: return;
       }
 
       tile.rand     = this.rand.nextInt(3);
@@ -98,15 +124,11 @@ class GameRow extends MetaComp {
       GameAnimation border = GameAnimation.rectangle(0.5, 1, ani);
       add(border);
 
-      border.x            = tile.offsetX + i * tileSize;
+      border.x            = tile.offsetX + tileIdx * tileSize;
       border.y            = tile.offsetY;
       border.compPriority = 5;
       border.hitBox       = Rect.fromLTWH(border.x, this.y, border.width, border.height);
-      }
-
-      // Generate the hit box
-      hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
-  }
+    }
 
   @override
   void update(double t) {
