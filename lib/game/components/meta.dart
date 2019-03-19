@@ -7,7 +7,7 @@ import 'package:ordered_set/ordered_set.dart';
 
 class MetaComp extends BaseComp {
   OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
-  Size size;
+  Size screenSize;
 
   @override
   void render(Canvas canvas) {
@@ -33,8 +33,8 @@ class MetaComp extends BaseComp {
   @mustCallSuper
   void preAdd(BaseComp c) {
     // first time resize
-    if (size != null) {
-      c.resize(size);
+    if (screenSize != null) {
+      c.resize(screenSize);
     }
     if (tileSize != null) {
       c.updateTileSize(tileSize);
@@ -42,6 +42,7 @@ class MetaComp extends BaseComp {
     if (speed != null) {
       c.updateSpeed(speed);
     }
+    c.onAdded();
   }
 
   void add(BaseComp c) {

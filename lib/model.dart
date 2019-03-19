@@ -1,7 +1,7 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AnimationData {
+class AnimationDataModel {
   static const String PREFIX = 'animation/';
 
   double playerSpeed;
@@ -10,7 +10,7 @@ class AnimationData {
   double deathScreen;
   double tap2restart;
 
-  AnimationData() { reset(); }
+  AnimationDataModel() { reset(); }
 
   void load(SharedPreferences prefs) async {
     playerSpeed = prefs.getDouble( PREFIX + 'playerSpeed' ) ?? playerSpeed;
@@ -37,7 +37,7 @@ class AnimationData {
   }
 }
 
-class GameSettings {
+class GameSettingsModel {
   static const String PREFIX = 'game/';
 
   double playerRelPos;
@@ -46,7 +46,7 @@ class GameSettings {
   bool   debugText;
   bool   renderHitBox;
 
-  GameSettings() { reset(); }
+  GameSettingsModel() { reset(); }
 
   void load(SharedPreferences prefs) async {
     playerRelPos = prefs.getDouble( PREFIX + 'playerRelPos' ) ?? playerRelPos;
@@ -76,12 +76,12 @@ class GameSettings {
 class DataModel extends Model {
   bool _hasLoaded = false;
 
-  final AnimationData _animationData = AnimationData();
-  final GameSettings  _gameSettings  = GameSettings();
+  final AnimationDataModel _animationData = AnimationDataModel();
+  final GameSettingsModel  _gameSettings  = GameSettingsModel();
 
-  bool          get hasLoaded => _hasLoaded;
-  AnimationData get animation => _animationData;
-  GameSettings  get game      => _gameSettings;
+  bool               get hasLoaded => _hasLoaded;
+  AnimationDataModel get animation => _animationData;
+  GameSettingsModel  get game      => _gameSettings;
 
   void setLoaded() {
     _hasLoaded = true;
@@ -94,7 +94,7 @@ class DataModel extends Model {
     _animationData.load(prefs);
     _gameSettings.load(prefs);
 
-    print('MODEL LOADED');
+    print('MODEL: LOADED');
     notifyListeners();
   }
 
@@ -104,7 +104,7 @@ class DataModel extends Model {
     _animationData.save(prefs);
     _gameSettings.save(prefs);
 
-    print('MODEL SAVED');
+    print('MODEL: SAVED');
     notifyListeners();
   }
 
@@ -112,7 +112,7 @@ class DataModel extends Model {
     _animationData.reset();
     _gameSettings.reset();
 
-    print('MODEL RESET');
+    print('MODEL: RESET');
     notifyListeners();
   }
 

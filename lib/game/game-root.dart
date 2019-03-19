@@ -6,8 +6,6 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/text_config.dart';
 
-import 'package:flutter/gestures.dart';
-
 import 'package:ordered_set/ordered_set.dart';
 import 'package:ordered_set/comparing.dart';
 
@@ -15,8 +13,13 @@ import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
 import 'package:game_one/game/row.dart';
 import 'package:game_one/game/you-died.dart';
+import 'package:game_one/game/tabToStart.dart';
+import 'package:game_one/game/paused.dart';
+import 'package:game_one/game/settings.dart';
 import 'package:game_one/game/components/text.dart';
 import 'package:game_one/game/components/base.dart';
+
+typedef void GameIsInit();
 
 class GameRoot extends Game {
   final DataModel model;
@@ -28,11 +31,15 @@ class GameRoot extends Game {
   int rowsAdded = 0;
   bool hasLost = false;
 
-  Player player;
-  GameRow lastRow;
-  YouDied deathScreen;
+  Player       player;
+  GameRow      lastRow;
+  YouDied      deathScreen;
+  TabToStart   tabToStart;
+  Paused       pausedText;
+  GameText     rowDebugText;
+  GameSettings settings;
 
-  GameText rowDebugText;
+  GameIsInit onInit = () {};
 
   OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
 
@@ -55,6 +62,9 @@ class GameRoot extends Game {
       'wall-0-R.png',
       'wall-1-R.png',
       'wall-2-R.png',
+      'wall-0-D.png',
+      'wall-1-D.png',
+      'wall-2-D.png',
       'death-screen-10.png',
       'death-screen-20.png',
       'death-screen-30.png',
@@ -66,17 +76,24 @@ class GameRoot extends Game {
       'death-screen-90.png',
       'death-screen-100.png',
       'restart.png',
+      'start.png',
+      'pause.png',
+      'cogwheel.png',
     ]);
 
-    print('INITIALIZED GAME');
+    print('GAME: INITIALIZED');
     model.setLoaded();
+
+    onInit();
   }
 
   void reset() {
-    posX = screenSize.width / 2;
+    posX = screenSize.width / 2 - tileSize / 2;
     rowsAdded = 0;
     hasLost = false;
     deathScreen = null;
+    tabToStart = null;
+    settings = null;
 
     resize(screenSize);
 
@@ -88,7 +105,6 @@ class GameRoot extends Game {
       add(rowDebugText);
       rowDebugText.compPriority = 50;
       rowDebugText.config = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
-      print('Enabling debug text');
     } else {
       rowDebugText = null;
     }
@@ -99,10 +115,18 @@ class GameRoot extends Game {
       animationSpeed: model.animation.playerSpeed
     );
 
-    add(player);
-    fillRows();
+    tabToStart = TabToStart(model: this.model);
+    settings   = GameSettings();
 
-    print('GAME RESET');
+    // Configure components
+    player.posX = posX;
+
+    fillRows();
+    add(tabToStart);
+    add(player);
+    add(settings);
+
+    print('GAME: RESET');
   }
 
   GameRow newRow(double nextY) {
@@ -159,6 +183,7 @@ class GameRoot extends Game {
       c.updateTileSize(tileSize);
     }
     c.updateSpeed(model.game.gameSpeed);
+    c.onAdded();
   }
 
   void add(BaseComp c) {
@@ -168,7 +193,7 @@ class GameRoot extends Game {
 
   @override
   void update(double t) {
-    if (hasLost) {
+    if (hasLost || !tabToStart.hasStarted || (pausedText?.isPaused ?? false)) {
       _updateLost(t);
     } else {
       _updateRunning(t);
@@ -185,20 +210,21 @@ class GameRoot extends Game {
     rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded; HIT: $wasHit';
 
     if (wasHit) {
-      print('You are dead!');
+      print('GAME: DIE DIE DIE');
       player.hitBoxColor = Color(0xffffffff);
       hasLost = true;
 
       player.die();
       deathScreen = YouDied(model: this.model);
       add(deathScreen);
-      deathScreen.init();
     }
   }
 
   void _updateLost(double t) {
-    player.update(t);
-    deathScreen.update(t);
+    player?.update(t);
+    deathScreen?.update(t);
+    tabToStart?.update(t);
+    pausedText?.update(t);
   }
 
   @override
@@ -216,9 +242,37 @@ class GameRoot extends Game {
     posX = position.dx;
   }
 
+  void pause() {
+    if ((pausedText?.isPaused ?? false) || !tabToStart.hasStarted) {
+      print('GAME: ALREADY PAUSED');
+      return;
+    }
+
+    pausedText = Paused(model: this.model);
+    add(pausedText);
+    print('GAME: PAUSED');
+  }
+
   void handleTap(Offset position) {
-    if (deathScreen?.canRestart ?? false) {
+    if (settings.handleTab(position)) {
       reset();
+      return;
+    }
+
+    if (deathScreen?.canRestart ?? false) {
+      print('GAME: RESTARTING');
+      reset();
+      tabToStart.hasStarted = true;
+    }
+
+    if (!tabToStart.hasStarted) {
+      print('GAME: STARTING');
+      tabToStart.hasStarted = true;
+    }
+
+    if (pausedText?.isPaused ?? false) {
+      print('GAME: CONTINUE');
+      pausedText.isPaused = false;
     }
   }
 }

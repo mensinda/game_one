@@ -22,7 +22,6 @@ dependencies:
 
   flame: ^0.10.2
   scoped_model: ^1.0.1
-  flutter_spinkit: ^3.1.0
   cupertino_icons: ^0.1.2
   shared_preferences: ^0.5.1+2
   card_settings: ^1.4.1
@@ -49,6 +48,9 @@ flutter:
     - assets/images/wall-0-R.png
     - assets/images/wall-1-R.png
     - assets/images/wall-2-R.png
+    - assets/images/wall-0-D.png
+    - assets/images/wall-1-D.png
+    - assets/images/wall-2-D.png
     - assets/images/death-screen-10.png
     - assets/images/death-screen-20.png
     - assets/images/death-screen-30.png
@@ -60,4 +62,7 @@ flutter:
     - assets/images/death-screen-90.png
     - assets/images/death-screen-100.png
     - assets/images/restart.png
+    - assets/images/start.png
+    - assets/images/pause.png
+    - assets/images/cogwheel.png
 

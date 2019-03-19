@@ -23,8 +23,6 @@ class Player extends MetaComp {
 
     add(GameAnimation.square(1, runningAnimation));
 
-    // Always draw the player last
-    compPriority = 10;
     hitBoxColor = Color(0xffffff00);
   }
 
@@ -48,5 +46,8 @@ class Player extends MetaComp {
   void update(double t) {
     super.update(t);
   }
+
+  @override
+  int priority() => 10;
 }
 

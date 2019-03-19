@@ -130,7 +130,7 @@ class _SettingsState extends State<Settings> {
                   label: 'Reset',
                   onPressed: () async {
                     model.reset();
-                    Navigator.pushNamed(context, '/');
+                    Navigator.popAndPushNamed(context, '/settings');
                   },
                   isDestructive: true,
                   backgroundColor: Colors.redAccent,
@@ -142,93 +142,6 @@ class _SettingsState extends State<Settings> {
           ]
         )
       ),
-    );
-  }
-}
-
-class Settingssss extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: ScopedModelDescendant<DataModel>(
-          builder: (context, child, model) {
-            return Form(
-              key: _formKey,
-              child: CardSettings.sectioned(
-                children: <CardSettingsSection> [],
-              ),
-            );
-          },
-          /*builder: (context, child, model) => ListView(
-            children: <Widget>[
-              SizedBox(height: 25),
-              _buildHeading(context, 'Animations'),
-
-              CupertinoSettings(
-                items: <Widget>[
-                  CSHeader('Animations'),
-                  CSWidget(
-                    CupertinoSlider(
-                      label: 'Player animation speed = ${(100 * model.animation.playerSpeed).round() / 100}',
-                      value: model.animation.playerSpeed,
-                      min: 0.01,
-                      max: 1.0,
-                      onChanged: (val) => model.animation.playerSpeed = val,
-                      divisions: 1000,
-                    ),
-                  ),
-                ],
-              ),
-
-              Card(
-                child:
-              ),
-
-              Divider(),
-
-              _buildButtons(context, model),
-            ],
-          ),*/
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeading(BuildContext context, String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget _buildButtons(BuildContext context, DataModel model) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            child: Text('Reset'),
-            onPressed: () {
-              model.reset();
-            },
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            child: Text('Save'),
-            onPressed: () {
-              model.save();
-            },
-          ),
-        ),
-      ],
     );
   }
 }

@@ -8,9 +8,10 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'package:game_one/model.dart';
 import 'package:game_one/game/game-root.dart';
-import 'package:game_one/tabs/play.dart';
 import 'package:game_one/tabs/settings.dart';
 import 'package:game_one/tabs/bluetooth.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 void main() async {
   Flame.audio.disableLog();
@@ -42,11 +43,12 @@ class AppRoot extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
+      navigatorKey: navigatorKey,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/':     (BuildContext context) => HomeScreen(title: 'Game One'),
-        '/game': (BuildContext context) => GameWrapper(game: game),
-        '/temp': (BuildContext context) => Container(),
+        '/':          (BuildContext context) => LoadingScreen(game: game),
+        '/settings':  (BuildContext context) => HomeScreen(title: 'Game One'),
+        '/game':      (BuildContext context) => GameWrapper(game: game),
       },
     );
   }
@@ -62,11 +64,46 @@ class GameWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapUp:     (TapUpDetails ev)      => game.handleTap(ev.globalPosition),
+      onDoubleTap: ()                     => game.pause(),
       onPanDown:   (DragDownDetails ev)   => game.handleDrag(ev.globalPosition),
       onPanUpdate: (DragUpdateDetails ev) => game.handleDrag(ev.globalPosition),
 
       behavior: HitTestBehavior.opaque,
       child:    game.widget,
+    );
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  final GameRoot game;
+
+  LoadingScreen({@required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    game.onInit = () => Navigator.pushNamed(context, '/game');
+    print('LOADINGSCREEN BUILT');
+
+    return Container(
+      child: Material(
+        type: MaterialType.transparency,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Loading...',
+                textDirection: null,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFFFFFFF),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -105,7 +142,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         bottom: TabBar(
           controller: controller,
           tabs: <Tab>[
-            Tab(icon: Icon(Icons.videogame_asset)),
             Tab(icon: Icon(Icons.settings)),
             Tab(icon: Icon(Icons.settings_bluetooth)),
           ],
@@ -115,7 +151,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
       body: TabBarView(
         controller: controller,
         children: <Widget>[
-          Play(),
           Settings(),
           Bluetooth()
         ]

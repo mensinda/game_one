@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flame/animation.dart';
 import 'package:flame/sprite.dart';
 import 'package:game_one/game/components/animation.dart';
+import 'package:game_one/game/components/fillRect.dart';
 import 'package:game_one/game/components/meta.dart';
 import 'package:game_one/model.dart';
 
@@ -12,7 +15,8 @@ class YouDied extends MetaComp {
 
   YouDied({this.model});
 
-  void init() => _youDied();
+  @override
+  void onAdded() => _youDied();
 
   void _youDied() {
     Sprite s01 = Sprite('death-screen-10.png');
@@ -49,7 +53,8 @@ class YouDied extends MetaComp {
     sprite = GameAnimation.rectangle(5, 4.5, anim);
     add(sprite);
     sprite.x = screenSize.width  / 2 - sprite.width  / 2;
-    sprite.y = screenSize.height / 2 - sprite.height / 1.5;
+    sprite.y = screenSize.height / 2 - sprite.height / 2 - tileSize * 2;
+    sprite.compPriority = 5;
   }
 
   void _tapToRestart() {
@@ -65,9 +70,11 @@ class YouDied extends MetaComp {
       )
     );
 
+    add(GameFillRect.fullscreen(color: Color(0x88000000)));
     add(restart);
     restart.x = screenSize.width / 2 - restart.width / 2;
     restart.y = sprite.toRect().bottom + restart.height;
+    restart.compPriority = 5;
   }
 
   @override

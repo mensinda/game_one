@@ -59,5 +59,7 @@ abstract class BaseComp extends PositionComponent {
 
     return lastWasHit = hitBox.overlaps(comp.hitBox);
   }
+
+  void onAdded() {}
 }
 
