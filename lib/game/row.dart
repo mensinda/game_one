@@ -1,11 +1,39 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:meta/meta.dart';
 
 import 'package:flame/animation.dart';
 import 'package:game_one/game/components/animation.dart';
 import 'package:game_one/game/components/meta.dart';
 import 'package:game_one/game/components/sprite.dart';
 import 'package:game_one/model.dart';
+
+enum TileType {
+  borderL,
+  borderR,
+  borderU,
+  borderD,
+  block,
+  empty
+}
+
+class TileCfg {
+  String d;
+  double w;
+  double h;
+  double o;
+
+  int    rand;
+  double tileSize;
+
+  TileCfg({this.d, this.w, this.h, this.o});
+
+  String get sprite  => 'wall-$rand-$d.png';
+  double get width   => this.w * 32 * 4;
+  double get height  => this.h * 32 * 4;
+  double get offsetX => this.w < 1.0 ? this.o * tileSize : 0.0;
+  double get offsetY => this.h < 1.0 ? this.o * tileSize : 0.0;
+}
 
 class GameRow extends MetaComp {
   final Random rand;
@@ -14,7 +42,7 @@ class GameRow extends MetaComp {
 
   GameRow({this.rand, this.model});
 
-  void generate({double top, int leftB, int rightB}) {
+  void generate({@required double top, @required List<TileType> tiles}) {
     this.y = top;
 
     // Generate the background tiles
@@ -28,51 +56,56 @@ class GameRow extends MetaComp {
       sp.compPriority = 0;
     }
 
-    // Generate the border
-    for (int i = 0; i < model.game.numTiles; i++) {
-      if (leftB == i) {
-        int tileIDX = rand.nextInt(3);
-        _generateBoder('wall-$tileIDX-L.png', i, 0);
+    // Generate the forground tiles
+    for (int i = 0; i < tiles.length; i++) {
+      TileType current = tiles[i];
+      if (current == TileType.empty || current == TileType.block) {
+        continue;
       }
 
-      if (rightB == i) {
-        int tileIDX = rand.nextInt(3);
-        _generateBoder('wall-$tileIDX-R.png', i, 0.5 * tileSize);
+      TileCfg tile;
+      switch (current) {
+        case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
+        case TileType.borderR: tile = TileCfg(d: 'R', w: 0.5, h: 1.0, o: 0.5); break;
+        case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.0); break;
+        case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.5); break;
+        default: continue;
       }
-    }
 
-    // Generate the hit box
-    hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
-  }
+      tile.rand     = this.rand.nextInt(3);
+      tile.tileSize = this.tileSize;
 
-  void _generateBoder(String sprite, int tile, double offset) {
-    Animation ani = Animation.variableSequenced(
-      sprite,
-      11,
-      <double>[
-        rand.nextDouble() * model.animation.wallPause, // 1
-        model.animation.wallSpeed,                     // 2
-        model.animation.wallSpeed,                     // 3
-        model.animation.wallSpeed,                     // 4
-        model.animation.wallSpeed,                     // 5
-        model.animation.wallSpeed,                     // 6
-        model.animation.wallSpeed,                     // 7
-        model.animation.wallSpeed,                     // 8
-        model.animation.wallSpeed,                     // 9
-        model.animation.wallSpeed,                     // 10
-        model.animation.wallPause,                     // 11
-      ],
-      textureHeight: 128,
-      textureWidth:  64,
-    );
+      Animation ani = Animation.variableSequenced(
+        tile.sprite,
+        11,
+        <double>[
+          rand.nextDouble() * model.animation.wallPause, // 1
+          model.animation.wallSpeed,                     // 2
+          model.animation.wallSpeed,                     // 3
+          model.animation.wallSpeed,                     // 4
+          model.animation.wallSpeed,                     // 5
+          model.animation.wallSpeed,                     // 6
+          model.animation.wallSpeed,                     // 7
+          model.animation.wallSpeed,                     // 8
+          model.animation.wallSpeed,                     // 9
+          model.animation.wallSpeed,                     // 10
+          model.animation.wallPause,                     // 11
+        ],
+        textureWidth:  tile.width,
+        textureHeight: tile.height,
+      );
 
-    GameAnimation border = GameAnimation.rectangle(0.5, 1, ani);
-    add(border);
+      GameAnimation border = GameAnimation.rectangle(0.5, 1, ani);
+      add(border);
 
-    border.x            = tile * tileSize + offset;
-    border.y            = 0;
-    border.compPriority = 5;
-    border.hitBox       = Rect.fromLTWH(border.x, this.y, border.width, border.height);
+      border.x            = tile.offsetX + i * tileSize;
+      border.y            = tile.offsetY;
+      border.compPriority = 5;
+      border.hitBox       = Rect.fromLTWH(border.x, this.y, border.width, border.height);
+      }
+
+      // Generate the hit box
+      hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
   }
 
   @override

@@ -11,19 +11,29 @@ class RowGenerator extends MetaComp {
   final DataModel model;
   GameRow lastRow;
 
-  RowGenerator({@required this.model, @required this.rand});
+  RowGenerator({@required this.model, @required this.rand}) {
+    hitBoxHitColor = Color(0x00000000); // Make the hit box transparent
+  }
 
   GameRow nextRow() {
     double  nextY = (lastRow?.y ?? screenSize.height) - tileSize;
     GameRow row   = GameRow(rand: rand, model: model);
     add(row);
 
-    row.generate(
-      top:    nextY,
-      leftB:  0,
-      rightB: model.game.numTiles - 1,
-    );
+    int leftBorderAt  = 0;
+    int rightBorderAt = model.game.numTiles - 1;
 
+    List<TileType> tiles = <TileType>[];
+
+    for (int i = 0; i < model.game.numTiles; i++) {
+      TileType newTile = TileType.empty;
+      if (i == leftBorderAt)  { newTile = TileType.borderL; }
+      if (i == rightBorderAt) { newTile = TileType.borderR; }
+
+      tiles.add(newTile);
+    }
+
+    row.generate(top: nextY, tiles: tiles);
     return row;
   }
 
