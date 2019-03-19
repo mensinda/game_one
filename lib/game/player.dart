@@ -3,22 +3,22 @@ import 'dart:ui';
 import 'package:flame/animation.dart';
 import 'package:meta/meta.dart';
 
+import 'package:game_one/model.dart';
 import 'package:game_one/game/components/meta.dart';
 import 'package:game_one/game/components/animation.dart';
 
 class Player extends MetaComp {
-  double relPosY;
-  double animationSpeed;
+  final DataModel model;
 
   Animation runningAnimation;
 
-  Player({@required this.relPosY, @required this.animationSpeed}) {
+  Player({@required this.model}) {
     runningAnimation = Animation.sequenced(
       'flame.png',
       5,
       textureWidth: 128,
       textureHeight: 128,
-      stepTime: animationSpeed
+      stepTime: model.animation.playerSpeed
     );
 
     add(GameAnimation.square(1, runningAnimation));
@@ -39,7 +39,7 @@ class Player extends MetaComp {
   @override
   void resize(Size s) {
     super.resize(s);
-    this.y = s.height / relPosY;
+    this.y = s.height / model.game.playerRelPos;
   }
 
   @override

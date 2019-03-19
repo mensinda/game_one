@@ -11,7 +11,7 @@ import 'package:ordered_set/comparing.dart';
 
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
-import 'package:game_one/game/row.dart';
+import 'package:game_one/game/rowGenerator.dart';
 import 'package:game_one/game/you-died.dart';
 import 'package:game_one/game/tabToStart.dart';
 import 'package:game_one/game/paused.dart';
@@ -32,7 +32,7 @@ class GameRoot extends Game {
   bool hasLost = false;
 
   Player       player;
-  GameRow      lastRow;
+  RowGenerator rows;
   YouDied      deathScreen;
   TabToStart   tabToStart;
   Paused       pausedText;
@@ -88,18 +88,18 @@ class GameRoot extends Game {
   }
 
   void reset() {
-    posX = screenSize.width / 2 - tileSize / 2;
-    rowsAdded = 0;
-    hasLost = false;
+    posX        = screenSize.width / 2;
+    hasLost     = false;
     deathScreen = null;
-    tabToStart = null;
-    settings = null;
+    tabToStart  = null;
+    settings    = null;
+    player      = null;
+    rows        = null;
 
     resize(screenSize);
 
     // Remove all components
     components.clear();
-    lastRow = null;
     if (model.game.debugText) {
       rowDebugText = GameText('<N/A>');
       add(rowDebugText);
@@ -110,43 +110,20 @@ class GameRoot extends Game {
     }
 
     // Re-add components
-    player = Player(
-      relPosY: model.game.playerRelPos,
-      animationSpeed: model.animation.playerSpeed
-    );
-
+    player     = Player(model: model);
     tabToStart = TabToStart(model: this.model);
     settings   = GameSettings();
+    rows       = RowGenerator(model: this.model, rand: this.rand);
+
+    add(tabToStart);
+    add(player);
+    add(settings);
+    add(rows);
 
     // Configure components
     player.posX = posX;
 
-    fillRows();
-    add(tabToStart);
-    add(player);
-    add(settings);
-
     print('GAME: RESET');
-  }
-
-  GameRow newRow(double nextY) {
-    GameRow row = GameRow(rand: rand, model: model);
-    add(row);
-
-    row.generate(
-      top:    nextY,
-      leftB:  0,
-      rightB: model.game.numTiles - 1,
-    );
-
-    return row;
-  }
-
-  void fillRows() {
-    while ((lastRow?.y ?? 100) > -1) {
-      lastRow = newRow((lastRow?.y ?? screenSize.height) - tileSize);
-      rowsAdded++;
-    }
   }
 
   @override
@@ -194,7 +171,7 @@ class GameRoot extends Game {
   @override
   void update(double t) {
     if (hasLost || !tabToStart.hasStarted || (pausedText?.isPaused ?? false)) {
-      _updateLost(t);
+      _updatePaused(t);
     } else {
       _updateRunning(t);
     }
@@ -204,7 +181,6 @@ class GameRoot extends Game {
     player.posX = posX;
     components.forEach((c) => c.update(t));
     components.removeWhere((c) => c.destroy());
-    fillRows();
 
     bool wasHit = components.map((comp) => comp.intersect(player)).reduce((val, comp) => val || comp);
     rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded; HIT: $wasHit';
@@ -220,7 +196,7 @@ class GameRoot extends Game {
     }
   }
 
-  void _updateLost(double t) {
+  void _updatePaused(double t) {
     player?.update(t);
     deathScreen?.update(t);
     tabToStart?.update(t);
@@ -262,7 +238,6 @@ class GameRoot extends Game {
     if (deathScreen?.canRestart ?? false) {
       print('GAME: RESTARTING');
       reset();
-      tabToStart.hasStarted = true;
     }
 
     if (!tabToStart.hasStarted) {
