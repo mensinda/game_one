@@ -13,6 +13,10 @@ enum TileType {
   borderR,
   borderU,
   borderD,
+  edgeBL,
+  edgeBR,
+  edgeTL,
+  edgeTR,
   block,
   empty
 }
@@ -69,6 +73,10 @@ class GameRow extends MetaComp {
         case TileType.borderR:
         case TileType.borderU:
         case TileType.borderD: _generateBorder(current, i); break;
+        case TileType.edgeBL:
+        case TileType.edgeBR:
+        case TileType.edgeTL:
+        case TileType.edgeTR: _generateEdge(current, i); break;
         case TileType.empty:
         default: break;
       }
@@ -91,44 +99,83 @@ class GameRow extends MetaComp {
   void _generateBorder(TileType current, int tileIdx) {
     TileCfg tile;
     switch (current) {
-        case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
-        case TileType.borderR: tile = TileCfg(d: 'R', w: 0.5, h: 1.0, o: 0.5); break;
-        case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.5); break;
-        case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.0); break;
-        default: return;
-      }
-
-      tile.rand     = this.rand.nextInt(3);
-      tile.tileSize = this.tileSize;
-
-      Animation ani = Animation.variableSequenced(
-        tile.sprite,
-        11,
-        <double>[
-          rand.nextDouble() * model.animation.wallPause, // 1
-          model.animation.wallSpeed,                     // 2
-          model.animation.wallSpeed,                     // 3
-          model.animation.wallSpeed,                     // 4
-          model.animation.wallSpeed,                     // 5
-          model.animation.wallSpeed,                     // 6
-          model.animation.wallSpeed,                     // 7
-          model.animation.wallSpeed,                     // 8
-          model.animation.wallSpeed,                     // 9
-          model.animation.wallSpeed,                     // 10
-          model.animation.wallPause,                     // 11
-        ],
-        textureWidth:  tile.width,
-        textureHeight: tile.height,
-      );
-
-      GameAnimation border = GameAnimation.rectangle(tile.w, tile.h, ani);
-      add(border);
-
-      border.x            = tile.offsetX + tileIdx * tileSize;
-      border.y            = tile.offsetY;
-      border.compPriority = 5;
-      border.hitBox       = Rect.fromLTWH(border.x, this.y + border.y, border.width, border.height);
+      case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
+      case TileType.borderR: tile = TileCfg(d: 'R', w: 0.5, h: 1.0, o: 0.5); break;
+      case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.5); break;
+      case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.0); break;
+      default: return;
     }
+
+    tile.rand     = this.rand.nextInt(3);
+    tile.tileSize = this.tileSize;
+
+    Animation ani = Animation.variableSequenced(
+      tile.sprite,
+      11,
+      <double>[
+        rand.nextDouble() * model.animation.wallPause, // 1
+        model.animation.wallSpeed,                     // 2
+        model.animation.wallSpeed,                     // 3
+        model.animation.wallSpeed,                     // 4
+        model.animation.wallSpeed,                     // 5
+        model.animation.wallSpeed,                     // 6
+        model.animation.wallSpeed,                     // 7
+        model.animation.wallSpeed,                     // 8
+        model.animation.wallSpeed,                     // 9
+        model.animation.wallSpeed,                     // 10
+        model.animation.wallPause,                     // 11
+      ],
+      textureWidth:  tile.width,
+      textureHeight: tile.height,
+    );
+
+    GameAnimation border = GameAnimation.rectangle(tile.w, tile.h, ani);
+    add(border);
+
+    border.x            = tile.offsetX + tileIdx * tileSize;
+    border.y            = tile.offsetY;
+    border.compPriority = 5;
+    border.hitBox       = Rect.fromLTWH(border.x, this.y + border.y, border.width, border.height);
+  }
+
+  void _generateEdge(TileType current, int tileIdx) {
+    String tile;
+    switch (current) {
+      case TileType.edgeBL: tile = 'edge-BL.png'; break;
+      case TileType.edgeBR: tile = 'edge-BR.png'; break;
+      case TileType.edgeTL: tile = 'edge-TL.png'; break;
+      case TileType.edgeTR: tile = 'edge-TR.png'; break;
+      default: return;
+    }
+
+    Animation ani = Animation.variableSequenced(
+      tile,
+      11,
+      <double>[
+        rand.nextDouble() * model.animation.wallPause, // 1
+        model.animation.wallSpeed,                     // 2
+        model.animation.wallSpeed,                     // 3
+        model.animation.wallSpeed,                     // 4
+        model.animation.wallSpeed,                     // 5
+        model.animation.wallSpeed,                     // 6
+        model.animation.wallSpeed,                     // 7
+        model.animation.wallSpeed,                     // 8
+        model.animation.wallSpeed,                     // 9
+        model.animation.wallSpeed,                     // 10
+        model.animation.wallPause,                     // 11
+      ],
+      textureWidth:  128,
+      textureHeight: 128,
+    );
+
+    GameAnimation edge = GameAnimation.square(1, ani);
+    add(edge);
+
+    edge.x            = tileIdx * tileSize;
+    edge.y            = 0;
+    edge.compPriority = 5;
+    edge.hitBox       = Rect.fromLTWH(edge.x, this.y, edge.width, edge.height);
+  }
 
   @override
   void update(double t) {

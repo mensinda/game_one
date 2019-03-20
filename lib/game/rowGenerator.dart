@@ -94,6 +94,19 @@ class NarrowCorridor extends Obstacle {
   List<TileType> _nextRowImpBorder(List<TileType> tiles, TileType tile) {
     tiles.fillRange(0,                 this.leftIDX, tile);
     tiles.fillRange(this.rightIDX + 1, data.width,   tile);
+
+    if (this.leftIDX > data.leftIDX) {
+      tiles[data.leftIDX] = this.isFirst ? TileType.edgeBR : TileType.edgeTR;
+    } else {
+      tiles[data.leftIDX] = TileType.borderL;
+    }
+
+    if (this.rightIDX < data.rightIDX) {
+      tiles[data.rightIDX] = this.isFirst ? TileType.edgeBL : TileType.edgeTL;
+    } else {
+      tiles[data.rightIDX] = TileType.borderR;
+    }
+
     return tiles;
   }
 

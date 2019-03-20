@@ -53,6 +53,10 @@ flutter:
     - assets/images/wall-2-U.png
     - assets/images/wall-0-D.png
     - assets/images/wall-1-D.png
+    - assets/images/edge-BL.png
+    - assets/images/edge-BR.png
+    - assets/images/edge-TL.png
+    - assets/images/edge-TR.png
     - assets/images/wall-2-D.png
     - assets/images/block-0.png
     - assets/images/block-1.png
