@@ -45,6 +45,7 @@ class GameSettingsModel {
   int    numTiles;
   bool   debugText;
   bool   renderHitBox;
+  bool   immortal;
 
   GameSettingsModel() { reset(); }
 
@@ -54,6 +55,7 @@ class GameSettingsModel {
     numTiles     = prefs.getInt(    PREFIX + 'numTiles'     ) ?? numTiles;
     debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
     renderHitBox = prefs.getBool(   PREFIX + 'renderHitBox' ) ?? renderHitBox;
+    immortal     = prefs.getBool(   PREFIX + 'immortal'     ) ?? immortal;
   }
 
   void save(SharedPreferences prefs) async {
@@ -62,6 +64,7 @@ class GameSettingsModel {
     await prefs.setInt(    PREFIX + 'numTiles',     numTiles     );
     await prefs.setBool(   PREFIX + 'debugText',    debugText    );
     await prefs.setBool(   PREFIX + 'renderHitBox', renderHitBox );
+    await prefs.setBool(   PREFIX + 'immortal',     immortal );
   }
 
   void reset() {
@@ -70,6 +73,71 @@ class GameSettingsModel {
     numTiles     = 6;
     debugText    = false;
     renderHitBox = false;
+    immortal     = false;
+  }
+}
+
+class GeneratorModel {
+  static const String PREFIX = 'generator/';
+
+  int minObstacleGap;
+  int maxObstacleGap;
+
+  int minCorridorLength;
+  int maxCorridorLength;
+  int minCorridorWidth;
+  int maxCorridorWidth;
+
+  int minBlockHeight;
+  int maxBlockHeight;
+  int minBlockWidth;
+  int maxBlockWidth;
+
+  GeneratorModel() { reset(); }
+
+  void load(SharedPreferences prefs) async {
+    minObstacleGap    = prefs.getInt( PREFIX + 'minObstacleGap'    ) ?? minObstacleGap;
+    maxObstacleGap    = prefs.getInt( PREFIX + 'maxObstacleGap'    ) ?? maxObstacleGap;
+
+    minCorridorLength = prefs.getInt( PREFIX + 'minCorridorLength' ) ?? minCorridorLength;
+    maxCorridorLength = prefs.getInt( PREFIX + 'maxCorridorLength' ) ?? maxCorridorLength;
+    minCorridorWidth  = prefs.getInt( PREFIX + 'minCorridorWidth'  ) ?? minCorridorWidth;
+    maxCorridorWidth  = prefs.getInt( PREFIX + 'maxCorridorWidth'  ) ?? maxCorridorWidth;
+
+    minBlockHeight    = prefs.getInt( PREFIX + 'minBlockHeight'    ) ?? minBlockHeight;
+    maxBlockHeight    = prefs.getInt( PREFIX + 'maxBlockHeight'    ) ?? maxBlockHeight;
+    minBlockWidth     = prefs.getInt( PREFIX + 'minBlockWidth'     ) ?? minBlockWidth;
+    maxBlockWidth     = prefs.getInt( PREFIX + 'maxBlockWidth'     ) ?? maxBlockWidth;
+  }
+
+  void save(SharedPreferences prefs) async {
+    await prefs.setInt( PREFIX + 'minObstacleGap',    minObstacleGap    );
+    await prefs.setInt( PREFIX + 'maxObstacleGap',    maxObstacleGap    );
+
+    await prefs.setInt( PREFIX + 'minCorridorLength', minCorridorLength );
+    await prefs.setInt( PREFIX + 'maxCorridorLength', maxCorridorLength );
+    await prefs.setInt( PREFIX + 'minCorridorWidth',  minCorridorWidth  );
+    await prefs.setInt( PREFIX + 'maxCorridorWidth',  maxCorridorWidth  );
+
+    await prefs.setInt( PREFIX + 'minBlockHeight',    minBlockHeight    );
+    await prefs.setInt( PREFIX + 'maxBlockHeight',    maxBlockHeight    );
+    await prefs.setInt( PREFIX + 'minBlockWidth',     minBlockWidth     );
+    await prefs.setInt( PREFIX + 'maxBlockWidth',     maxBlockWidth     );
+  }
+
+  void reset() {
+    minObstacleGap    = 4;
+    maxObstacleGap    = 7;
+
+    minCorridorLength = 3;
+    maxCorridorLength = 6;
+    minCorridorWidth  = 2;
+    maxCorridorWidth  = 3;
+
+    minBlockHeight = 0;
+    maxBlockHeight = 2;
+    minBlockWidth  = 1;
+    maxBlockWidth  = 2;
   }
 }
 
@@ -78,10 +146,12 @@ class DataModel extends Model {
 
   final AnimationDataModel _animationData = AnimationDataModel();
   final GameSettingsModel  _gameSettings  = GameSettingsModel();
+  final GeneratorModel     _gnererator    = GeneratorModel();
 
   bool               get hasLoaded => _hasLoaded;
   AnimationDataModel get animation => _animationData;
   GameSettingsModel  get game      => _gameSettings;
+  GeneratorModel     get generator => _gnererator;
 
   void setLoaded() {
     _hasLoaded = true;

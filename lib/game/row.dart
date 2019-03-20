@@ -93,8 +93,8 @@ class GameRow extends MetaComp {
     switch (current) {
         case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
         case TileType.borderR: tile = TileCfg(d: 'R', w: 0.5, h: 1.0, o: 0.5); break;
-        case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.0); break;
-        case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.5); break;
+        case TileType.borderU: tile = TileCfg(d: 'U', w: 1.0, h: 0.5, o: 0.5); break;
+        case TileType.borderD: tile = TileCfg(d: 'D', w: 1.0, h: 0.5, o: 0.0); break;
         default: return;
       }
 
@@ -121,13 +121,13 @@ class GameRow extends MetaComp {
         textureHeight: tile.height,
       );
 
-      GameAnimation border = GameAnimation.rectangle(0.5, 1, ani);
+      GameAnimation border = GameAnimation.rectangle(tile.w, tile.h, ani);
       add(border);
 
       border.x            = tile.offsetX + tileIdx * tileSize;
       border.y            = tile.offsetY;
       border.compPriority = 5;
-      border.hitBox       = Rect.fromLTWH(border.x, this.y, border.width, border.height);
+      border.hitBox       = Rect.fromLTWH(border.x, this.y + border.y, border.width, border.height);
     }
 
   @override

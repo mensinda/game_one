@@ -28,7 +28,6 @@ class GameRoot extends Game {
   Size screenSize;
   double posX = 0 ;
   double tileSize = 50;
-  int rowsAdded = 0;
   bool hasLost = false;
 
   Player       player;
@@ -110,7 +109,7 @@ class GameRoot extends Game {
     if (model.game.debugText) {
       rowDebugText = GameText('<N/A>');
       add(rowDebugText);
-      rowDebugText.compPriority = 50;
+      rowDebugText.compPriority = 100;
       rowDebugText.config = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
     } else {
       rowDebugText = null;
@@ -190,9 +189,13 @@ class GameRoot extends Game {
     components.removeWhere((c) => c.destroy());
 
     bool wasHit = components.map((comp) => comp.intersect(player)).reduce((val, comp) => val || comp);
-    rowDebugText?.text = 'Comp: ${components.length}; Rows: $rowsAdded; HIT: $wasHit';
+    rowDebugText?.text = 'Comp: ${components.length}; Rows: ${rows.components.length}; HIT: $wasHit';
 
-    if (wasHit) {
+    if (model.game.renderHitBox) {
+      player.hitBoxColor = wasHit ? Color(0xffffffff) : Color(0xffffff00);
+    }
+
+    if (wasHit && !model.game.immortal) {
       print('GAME: DIE DIE DIE');
       player.hitBoxColor = Color(0xffffffff);
       hasLost = true;

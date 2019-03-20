@@ -93,6 +93,78 @@ class _SettingsState extends State<Settings> {
               ]
             ),
 
+            // Generator settings
+            CardSettingsSection(
+              header: CardSettingsHeader(label: 'Generator'),
+              children: <Widget>[
+
+                CardSettingsInt(
+                  label: 'Min Obstacle Gap',
+                  initialValue: model.generator.minObstacleGap,
+                  onChanged: (val) => model.generator.minObstacleGap = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Max Obstacle Gap',
+                  initialValue: model.generator.maxObstacleGap,
+                  onChanged: (val) => model.generator.maxObstacleGap = val,
+                ),
+
+
+
+                CardSettingsInt(
+                  label: 'Min Corridor Length',
+                  initialValue: model.generator.minCorridorLength,
+                  onChanged: (val) => model.generator.minCorridorLength = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Max Corridor Length',
+                  initialValue: model.generator.maxCorridorLength,
+                  onChanged: (val) => model.generator.maxCorridorLength = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Min Corridor Width',
+                  initialValue: model.generator.minCorridorWidth,
+                  onChanged: (val) => model.generator.minCorridorWidth = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Max Corridor Width',
+                  initialValue: model.generator.maxCorridorWidth,
+                  onChanged: (val) => model.generator.maxCorridorWidth = val,
+                ),
+
+
+
+                CardSettingsInt(
+                  label: 'Min Block Heigth',
+                  initialValue: model.generator.minBlockHeight,
+                  onChanged: (val) => model.generator.minBlockHeight = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Max Block Height',
+                  initialValue: model.generator.maxBlockHeight,
+                  onChanged: (val) => model.generator.maxBlockHeight = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Min Block Width',
+                  initialValue: model.generator.minBlockWidth,
+                  onChanged: (val) => model.generator.minBlockWidth = val,
+                ),
+
+                CardSettingsInt(
+                  label: 'Max Block Width',
+                  initialValue: model.generator.maxBlockWidth,
+                  onChanged: (val) => model.generator.maxBlockWidth = val,
+                ),
+
+              ]
+            ),
+
             // Debug settings
             CardSettingsSection(
               header: CardSettingsHeader(label: 'Debug settings'),
@@ -108,6 +180,12 @@ class _SettingsState extends State<Settings> {
                   label: 'Render hit box',
                   initialValue: model.game.renderHitBox,
                   onChanged: (val) => model.game.renderHitBox = val,
+                ),
+
+                CardSettingsSwitch(
+                  label: 'Immortal Player',
+                  initialValue: model.game.immortal,
+                  onChanged: (val) => model.game.immortal = val,
                 ),
 
               ]

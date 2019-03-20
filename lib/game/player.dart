@@ -32,8 +32,9 @@ class Player extends MetaComp {
 
   set posX(double x) {
     this.x      = x - this.width / 2;
-    double hw   = (tileSize ?? 16) / 2;
-    this.hitBox = Rect.fromLTWH(this.x + hw / 2, this.y + hw / 2, hw, hw);
+    double hw   = (tileSize ?? 16) / 1.75;
+    double ofs  = (this.width  / 2 - hw / 2);
+    this.hitBox = Rect.fromLTWH(this.x + ofs, this.y + ofs, hw, hw);
   }
 
   @override
