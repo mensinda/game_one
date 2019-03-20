@@ -176,6 +176,12 @@ class _SettingsState extends State<Settings> {
                   onChanged: (val) => model.game.immortal = val,
                 ),
 
+                CardSettingsSwitch(
+                  label: 'Draw obstacle lines',
+                  initialValue: model.game.drawLines,
+                  onChanged: (val) => model.game.drawLines = val,
+                ),
+
               ]
             ),
 

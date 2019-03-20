@@ -46,6 +46,7 @@ class GameSettingsModel {
   bool   debugText;
   bool   renderHitBox;
   bool   immortal;
+  bool   drawLines;
 
   GameSettingsModel() { reset(); }
 
@@ -56,6 +57,7 @@ class GameSettingsModel {
     debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
     renderHitBox = prefs.getBool(   PREFIX + 'renderHitBox' ) ?? renderHitBox;
     immortal     = prefs.getBool(   PREFIX + 'immortal'     ) ?? immortal;
+    drawLines    = prefs.getBool(   PREFIX + 'drawLines'    ) ?? drawLines;
   }
 
   void save(SharedPreferences prefs) async {
@@ -64,7 +66,8 @@ class GameSettingsModel {
     await prefs.setInt(    PREFIX + 'numTiles',     numTiles     );
     await prefs.setBool(   PREFIX + 'debugText',    debugText    );
     await prefs.setBool(   PREFIX + 'renderHitBox', renderHitBox );
-    await prefs.setBool(   PREFIX + 'immortal',     immortal );
+    await prefs.setBool(   PREFIX + 'immortal',     immortal     );
+    await prefs.setBool(   PREFIX + 'drawLines',    drawLines    );
   }
 
   void reset() {
@@ -74,6 +77,7 @@ class GameSettingsModel {
     debugText    = false;
     renderHitBox = false;
     immortal     = false;
+    drawLines    = false;
   }
 }
 

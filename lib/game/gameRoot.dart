@@ -16,6 +16,7 @@ import 'package:game_one/game/you-died.dart';
 import 'package:game_one/game/tabToStart.dart';
 import 'package:game_one/game/paused.dart';
 import 'package:game_one/game/settings.dart';
+import 'package:game_one/game/obstacles.dart';
 import 'package:game_one/game/components/text.dart';
 import 'package:game_one/game/components/base.dart';
 
@@ -123,7 +124,7 @@ class GameRoot extends Game {
     player     = Player(model: model);
     tabToStart = TabToStart(model: this.model);
     settings   = GameSettings();
-    rows       = RowGenerator(model: this.model, rand: this.rand);
+    rows       = RowGenerator(model: this.model, rand: this.rand, player: player);
 
     add(tabToStart);
     add(player);
@@ -144,6 +145,51 @@ class GameRoot extends Game {
 
     if (model.game.renderHitBox) {
       components.forEach((comp) => comp.renderHitBox(canvas));
+    }
+
+    if (model.game.drawLines) {
+      canvas.restore();
+      canvas.restore();
+      _renderObstacleLines(canvas);
+    }
+  }
+
+  void _renderObstacleLines(Canvas canvas) {
+    ObstacleInfo obs = rows.currentObstacle;
+    if (obs == null) {
+      return;
+    }
+
+    Paint paint = Paint();
+    paint.color = Color(0xff00ffff);
+    paint.style = PaintingStyle.stroke;
+    paint.strokeWidth = 1.25;
+
+    List<Path> paths = <Path>[];
+
+    if (obs.left != null) {
+      Path p = Path();
+      p.moveTo(player.toRect().center.dx, player.toRect().center.dy);
+      p.lineTo(obs.left, obs.posY);
+      paths.add(p);
+    }
+
+    if (obs.right != null) {
+      Path p = Path();
+      p.moveTo(player.toRect().center.dx, player.toRect().center.dy);
+      p.lineTo(obs.right, obs.posY);
+      paths.add(p);
+    }
+
+    if (obs.middle != null) {
+      Path p = Path();
+      p.moveTo(player.toRect().center.dx, player.toRect().center.dy);
+      p.lineTo(obs.middle, obs.posY);
+      paths.add(p);
+    }
+
+    for (Path i in paths) {
+      canvas.drawPath(i, paint);
     }
   }
 
