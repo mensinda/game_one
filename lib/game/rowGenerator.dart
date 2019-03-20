@@ -9,8 +9,9 @@ import 'package:game_one/game/components/meta.dart';
 class DataHelper {
   final Random    rand;
   final DataModel model;
+  double          tileSize;
 
-  DataHelper(this.rand, this.model);
+  DataHelper(this.rand, this.model, this.tileSize);
 
   int random(int min, int max) => rand.nextInt(max - min + 1) + min;
 
@@ -39,6 +40,9 @@ abstract class Obstacle {
   bool get isFirst    => length == totalLength;
   bool get isLast     => length == 1;
 
+  double get offset           => 0.0;
+  bool   get hasVariableLayer => false;
+
   int            _computeLength();
   List<TileType> _nextRowImp(List<TileType> tiles);
 
@@ -46,9 +50,12 @@ abstract class Obstacle {
     List<TileType> tiles;
     tiles = List<TileType>.filled(data.width, TileType.empty);
     tiles = _nextRowImp(tiles);
-    length--;
     return tiles;
   }
+
+  List<TileType> nextVariableLayer() => <TileType>[];
+
+  void finishedRow() => length--;
 }
 
 class WideCorridor extends Obstacle {
@@ -125,17 +132,40 @@ class NarrowCorridor extends Obstacle {
 }
 
 class SpikeWall extends Obstacle {
-  SpikeWall(DataHelper d) : super(d);
+  double pos;
+
+  SpikeWall(DataHelper d) : super(d) {
+    this.pos = data.rand.nextDouble() * (data.width - 3) * data.tileSize + data.tileSize;
+  }
 
   @override
-  int _computeLength() => data.random(data.gen.minBlockHeight, data.gen.maxBlockHeight);
+  int _computeLength() => data.random(data.gen.minBlockHeight, data.gen.maxBlockHeight) + 1;
 
   @override
   List<TileType> _nextRowImp(List<TileType> tiles) {
-    tiles[0]              = TileType.borderU;
-    tiles[data.width - 1] = TileType.borderD;
+    tiles[data.leftIDX]  = TileType.borderL;
+    tiles[data.rightIDX] = TileType.borderR;
     return tiles;
   }
+
+  @override
+  List<TileType> nextVariableLayer() {
+    if (this.isFirst) {
+      return <TileType>[TileType.empty, TileType.borderD, TileType.empty];
+    }
+
+    if (this.isLast) {
+      return <TileType>[TileType.empty, TileType.borderU, TileType.empty];
+    }
+
+    return <TileType>[TileType.borderR, TileType.block, TileType.borderL];
+  }
+
+  @override
+  double get offset           => this.pos - data.tileSize;
+
+  @override
+  bool   get hasVariableLayer => true;
 }
 
 // ======================
@@ -150,14 +180,15 @@ class RowGenerator extends MetaComp {
 
   List<Obstacle> obstacles = <Obstacle>[];
 
-  RowGenerator({@required this.model, @required this.rand}) : dataHelper = DataHelper(rand, model) {
+  RowGenerator({@required this.model, @required this.rand}) : dataHelper = DataHelper(rand, model, 16) {
     hitBoxHitColor = Color(0x00000000); // Make the hit box transparent
   }
 
   void generateObstacle() {
-    switch (rand.nextInt(2)) {
-      case 0: obstacles.add(SpikeWall(dataHelper));      break;
-      case 1: obstacles.add(NarrowCorridor(dataHelper)); break;
+    switch (rand.nextInt(3)) {
+      case 0:
+      case 1: obstacles.add(SpikeWall(dataHelper));      break;
+      case 2: obstacles.add(NarrowCorridor(dataHelper)); break;
       default:
     }
     obstacles.add(WideCorridor(dataHelper));
@@ -197,12 +228,19 @@ class RowGenerator extends MetaComp {
       tiles.add(newTile);
     }
 
-    row.generate(top: nextY, tiles: currentObstacle().nextRow());
+    Obstacle obs = currentObstacle();
+    row.generate(top: nextY, tiles: obs.nextRow());
+    if (obs.hasVariableLayer) {
+      row.addElements(tiles: obs.nextVariableLayer(), offset: obs.offset);
+    }
+
+    obs.finishedRow();
     return row;
   }
 
   @override
   void onAdded() {
+    dataHelper.tileSize = this.tileSize;
     obstacles.add(WideCorridor(dataHelper));
     obstacles.add(WideCorridor(dataHelper));
     while ((lastRow?.y ?? 100) > -1) {
@@ -216,6 +254,12 @@ class RowGenerator extends MetaComp {
     while ((lastRow?.y ?? 100) > -1) {
       lastRow = nextRow();
     }
+  }
+
+  @override
+  void updateTileSize(double ts) {
+    super.updateTileSize(ts);
+    dataHelper.tileSize = ts;
   }
 
   @override

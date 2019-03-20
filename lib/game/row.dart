@@ -61,6 +61,13 @@ class GameRow extends MetaComp {
     }
 
     // Generate the forground tiles
+    addElements(tiles: tiles, offset: 0.0);
+
+    // Generate the hit box
+    hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
+  }
+
+  void addElements({List<TileType> tiles, double offset}) {
     for (int i = 0; i < tiles.length; i++) {
       TileType current = tiles[i];
       if (current == TileType.empty) {
@@ -68,35 +75,31 @@ class GameRow extends MetaComp {
       }
 
       switch (current) {
-        case TileType.block:   _generateBlock(i); break;
+        case TileType.block:   _generateBlock(i, offset); break;
         case TileType.borderL:
         case TileType.borderR:
         case TileType.borderU:
-        case TileType.borderD: _generateBorder(current, i); break;
+        case TileType.borderD: _generateBorder(current, i, offset); break;
         case TileType.edgeBL:
         case TileType.edgeBR:
         case TileType.edgeTL:
-        case TileType.edgeTR: _generateEdge(current, i); break;
+        case TileType.edgeTR: _generateEdge(current, i, offset); break;
         case TileType.empty:
         default: break;
       }
-
     }
-
-    // Generate the hit box
-    hitBox = Rect.fromLTWH(0, this.y, screenSize.height, tileSize);
   }
 
-  void _generateBlock(int tileIdx) {
+  void _generateBlock(int tileIdx, double offset) {
     GameSprite sp = GameSprite.square(1, 'block-${this.rand.nextInt(4)}.png');
     add(sp);
-    sp.x            = tileIdx * tileSize;
+    sp.x            = tileIdx * tileSize + offset;
     sp.y            = 0;
     sp.compPriority = 5;
     sp.hitBox       = Rect.fromLTWH(sp.x, this.y, sp.width, sp.height);
   }
 
-  void _generateBorder(TileType current, int tileIdx) {
+  void _generateBorder(TileType current, int tileIdx, double offset) {
     TileCfg tile;
     switch (current) {
       case TileType.borderL: tile = TileCfg(d: 'L', w: 0.5, h: 1.0, o: 0.0); break;
@@ -132,13 +135,13 @@ class GameRow extends MetaComp {
     GameAnimation border = GameAnimation.rectangle(tile.w, tile.h, ani);
     add(border);
 
-    border.x            = tile.offsetX + tileIdx * tileSize;
+    border.x            = tile.offsetX + tileIdx * tileSize + offset;
     border.y            = tile.offsetY;
     border.compPriority = 5;
     border.hitBox       = Rect.fromLTWH(border.x, this.y + border.y, border.width, border.height);
   }
 
-  void _generateEdge(TileType current, int tileIdx) {
+  void _generateEdge(TileType current, int tileIdx, double offset) {
     String tile;
     switch (current) {
       case TileType.edgeBL: tile = 'edge-BL.png'; break;
@@ -171,7 +174,7 @@ class GameRow extends MetaComp {
     GameAnimation edge = GameAnimation.square(1, ani);
     add(edge);
 
-    edge.x            = tileIdx * tileSize;
+    edge.x            = tileIdx * tileSize + offset;
     edge.y            = 0;
     edge.compPriority = 5;
     edge.hitBox       = Rect.fromLTWH(edge.x, this.y, edge.width, edge.height);

@@ -150,18 +150,6 @@ class _SettingsState extends State<Settings> {
                   onChanged: (val) => model.generator.maxBlockHeight = val,
                 ),
 
-                CardSettingsInt(
-                  label: 'Min Block Width',
-                  initialValue: model.generator.minBlockWidth,
-                  onChanged: (val) => model.generator.minBlockWidth = val,
-                ),
-
-                CardSettingsInt(
-                  label: 'Max Block Width',
-                  initialValue: model.generator.maxBlockWidth,
-                  onChanged: (val) => model.generator.maxBlockWidth = val,
-                ),
-
               ]
             ),
 

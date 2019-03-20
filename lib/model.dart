@@ -129,15 +129,13 @@ class GeneratorModel {
     minObstacleGap    = 4;
     maxObstacleGap    = 7;
 
-    minCorridorLength = 3;
-    maxCorridorLength = 6;
+    minCorridorLength = 4;
+    maxCorridorLength = 7;
     minCorridorWidth  = 2;
     maxCorridorWidth  = 3;
 
-    minBlockHeight = 0;
+    minBlockHeight = 1;
     maxBlockHeight = 2;
-    minBlockWidth  = 1;
-    maxBlockWidth  = 2;
   }
 }
 
