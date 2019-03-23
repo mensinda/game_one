@@ -45,6 +45,8 @@ class GameSettingsModel {
   double gameSpeedup;
   double maxPlayerSpeed;
   int    numTiles;
+  double darkenFactor;
+  bool   darkenScreen;
   bool   debugText;
   bool   renderHitBox;
   bool   immortal;
@@ -58,6 +60,8 @@ class GameSettingsModel {
     gameSpeedup    = prefs.getDouble( PREFIX + 'gameSpeedup'    ) ?? gameSpeedup;
     maxPlayerSpeed = prefs.getDouble( PREFIX + 'maxPlayerSpeed' ) ?? maxPlayerSpeed;
     numTiles       = prefs.getInt(    PREFIX + 'numTiles'       ) ?? numTiles;
+    darkenFactor   = prefs.getDouble( PREFIX + 'darkenFactor'   ) ?? darkenFactor;
+    darkenScreen   = prefs.getBool(   PREFIX + 'darkenScreen'   ) ?? darkenScreen;
     debugText      = prefs.getBool(   PREFIX + 'debugText'      ) ?? debugText;
     renderHitBox   = prefs.getBool(   PREFIX + 'renderHitBox'   ) ?? renderHitBox;
     immortal       = prefs.getBool(   PREFIX + 'immortal'       ) ?? immortal;
@@ -70,6 +74,8 @@ class GameSettingsModel {
     await prefs.setDouble( PREFIX + 'gameSpeedup',    gameSpeedup    );
     await prefs.setDouble( PREFIX + 'maxPlayerSpeed', maxPlayerSpeed );
     await prefs.setInt(    PREFIX + 'numTiles',       numTiles       );
+    await prefs.setDouble( PREFIX + 'darkenFactor',   darkenFactor   );
+    await prefs.setBool(   PREFIX + 'darkenScreen',   darkenScreen   );
     await prefs.setBool(   PREFIX + 'debugText',      debugText      );
     await prefs.setBool(   PREFIX + 'renderHitBox',   renderHitBox   );
     await prefs.setBool(   PREFIX + 'immortal',       immortal       );
@@ -82,6 +88,8 @@ class GameSettingsModel {
     gameSpeedup    = 2;
     maxPlayerSpeed = 300;
     numTiles       = 6;
+    darkenFactor   = 0.005;
+    darkenScreen   = true;
     debugText      = false;
     renderHitBox   = false;
     immortal       = false;

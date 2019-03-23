@@ -106,6 +106,20 @@ class _SettingsState extends State<Settings> {
                   onChanged: (val) => model.game.numTiles = val,
                 ),
 
+                CardSettingsSwitch(
+                  label: 'Darken screen',
+                  initialValue: model.game.darkenScreen,
+                  onChanged: (val) => model.game.darkenScreen = val,
+                ),
+
+                CardSettingsSlider(
+                  label: 'Darken factor',
+                  initialValue: model.game.darkenFactor,
+                  min: 0.0001,
+                  max: 0.0100,
+                  onChangedEnd: (val) => model.game.darkenFactor = val,
+                ),
+
               ]
             ),
 

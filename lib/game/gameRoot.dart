@@ -31,6 +31,7 @@ class GameRoot extends Game {
   double posX = 0 ;
   double tileSize = 50;
   double gameSpeed = 0;
+  double darkenAlpha = 0;
   bool hasLost = false;
 
   Player       player;
@@ -109,6 +110,7 @@ class GameRoot extends Game {
 
     posX        = screenSize.width / 2;
     gameSpeed   = model.game.gameSpeed;
+    darkenAlpha = 0;
     hasLost     = false;
     deathScreen = null;
     tabToStart  = null;
@@ -155,6 +157,15 @@ class GameRoot extends Game {
     canvas.save();
     components.forEach((comp) => renderComponent(canvas, comp));
     canvas.restore();
+
+    if (model.game.darkenScreen && !(hasLost || !tabToStart.hasStarted || (pausedText?.isPaused ?? false))) {
+      Rect  fullscreen = Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
+      Color blackAlpha = Color.fromARGB((darkenAlpha * 255).round(), 0, 0, 0);
+      Paint tempPaint  = Paint();
+      tempPaint.color  = blackAlpha;
+      tempPaint.style  = PaintingStyle.fill;
+      canvas.drawRect(fullscreen, tempPaint);
+    }
 
     if (model.game.renderHitBox) {
       components.forEach((comp) => comp.renderHitBox(canvas));
@@ -257,8 +268,11 @@ class GameRoot extends Game {
     components.forEach((c) => c.update(t));
     components.removeWhere((c) => c.destroy());
 
+    darkenAlpha += t * model.game.darkenFactor;
+    darkenAlpha =  min(0.95, darkenAlpha);
+
     bool wasHit = components.map((comp) => comp.intersect(player)).reduce((val, comp) => val || comp);
-    rowDebugText?.text = 'Comp: ${components.length}; Rows: ${rows.components.length}; Speed: ${gameSpeed.round()}; HIT: $wasHit';
+    rowDebugText?.text = 'Comp: ${components.length}; Rows: ${rows.components.length}; Speed: ${gameSpeed.round()}; Dark: ${(darkenAlpha * 100).round()}%; HIT: $wasHit';
 
     if (model.game.renderHitBox) {
       player.hitBoxColor = wasHit ? Color(0xffffffff) : Color(0xffffff00);
