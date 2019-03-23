@@ -9,6 +9,7 @@ import 'package:flame/text_config.dart';
 import 'package:ordered_set/ordered_set.dart';
 import 'package:ordered_set/comparing.dart';
 
+import 'package:game_one/main.dart';
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
 import 'package:game_one/game/rowGenerator.dart';
@@ -46,6 +47,7 @@ class GameRoot extends Game {
   GameRoot({@required this.model});
 
   void init() async {
+    navigatorKey.currentState.pushNamed('/loading');
     resize(await Flame.util.initialDimensions());
 
     rand = Random();
@@ -92,13 +94,18 @@ class GameRoot extends Game {
       'cogwheel.png',
     ]);
 
-    print('GAME: INITIALIZED');
     model.setLoaded();
+    reset();
+    print('GAME: INITIALIZED');
 
     onInit();
   }
 
   void reset() {
+    if (!model.hasLoaded) {
+      return;
+    }
+
     posX        = screenSize.width / 2;
     hasLost     = false;
     deathScreen = null;
@@ -139,6 +146,10 @@ class GameRoot extends Game {
 
   @override
   void render(Canvas canvas) {
+    if (!model.hasLoaded) {
+      return;
+    }
+
     canvas.save();
     components.forEach((comp) => renderComponent(canvas, comp));
     canvas.restore();
@@ -226,6 +237,10 @@ class GameRoot extends Game {
 
   @override
   void update(double t) {
+    if (!model.hasLoaded) {
+      return;
+    }
+
     if (hasLost || !tabToStart.hasStarted || (pausedText?.isPaused ?? false)) {
       _updatePaused(t);
     } else {

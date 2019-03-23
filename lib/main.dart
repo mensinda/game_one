@@ -46,9 +46,9 @@ class AppRoot extends StatelessWidget {
       navigatorKey: navigatorKey,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/':          (BuildContext context) => LoadingScreen(game: game),
+        '/loading':   (BuildContext context) => LoadingScreen(game: game),
         '/settings':  (BuildContext context) => HomeScreen(title: 'Game One'),
-        '/game':      (BuildContext context) => GameWrapper(game: game),
+        '/':          (BuildContext context) => GameWrapper(game: game),
       },
     );
   }
@@ -81,8 +81,7 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    game.onInit = () => Navigator.pushNamed(context, '/game');
-    print('LOADINGSCREEN BUILT');
+    game.onInit = () => Navigator.pop(context);
 
     return Container(
       child: Material(
