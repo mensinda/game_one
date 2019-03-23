@@ -42,6 +42,7 @@ class GameSettingsModel {
 
   double playerRelPos;
   double gameSpeed;
+  double gameSpeedup;
   double maxPlayerSpeed;
   int    numTiles;
   bool   debugText;
@@ -54,6 +55,7 @@ class GameSettingsModel {
   void load(SharedPreferences prefs) async {
     playerRelPos   = prefs.getDouble( PREFIX + 'playerRelPos'   ) ?? playerRelPos;
     gameSpeed      = prefs.getDouble( PREFIX + 'gameSpeed'      ) ?? gameSpeed;
+    gameSpeedup    = prefs.getDouble( PREFIX + 'gameSpeedup'    ) ?? gameSpeedup;
     maxPlayerSpeed = prefs.getDouble( PREFIX + 'maxPlayerSpeed' ) ?? maxPlayerSpeed;
     numTiles       = prefs.getInt(    PREFIX + 'numTiles'       ) ?? numTiles;
     debugText      = prefs.getBool(   PREFIX + 'debugText'      ) ?? debugText;
@@ -65,6 +67,7 @@ class GameSettingsModel {
   void save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerRelPos',   playerRelPos   );
     await prefs.setDouble( PREFIX + 'gameSpeed',      gameSpeed      );
+    await prefs.setDouble( PREFIX + 'gameSpeedup',    gameSpeedup    );
     await prefs.setDouble( PREFIX + 'maxPlayerSpeed', maxPlayerSpeed );
     await prefs.setInt(    PREFIX + 'numTiles',       numTiles       );
     await prefs.setBool(   PREFIX + 'debugText',      debugText      );
@@ -76,6 +79,7 @@ class GameSettingsModel {
   void reset() {
     playerRelPos   = 1.3;
     gameSpeed      = 200;
+    gameSpeedup    = 2;
     maxPlayerSpeed = 300;
     numTiles       = 6;
     debugText      = false;

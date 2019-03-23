@@ -85,6 +85,14 @@ class _SettingsState extends State<Settings> {
                 ),
 
                 CardSettingsSlider(
+                  label: 'Game speed up',
+                  initialValue: model.game.gameSpeedup,
+                  min: 0.5,
+                  max: 10,
+                  onChangedEnd: (val) => model.game.gameSpeedup = val,
+                ),
+
+                CardSettingsSlider(
                   label: 'Max player speed',
                   initialValue: model.game.maxPlayerSpeed,
                   min: 5,

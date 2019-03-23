@@ -30,6 +30,7 @@ class GameRoot extends Game {
   Size screenSize;
   double posX = 0 ;
   double tileSize = 50;
+  double gameSpeed = 0;
   bool hasLost = false;
 
   Player       player;
@@ -107,6 +108,7 @@ class GameRoot extends Game {
     }
 
     posX        = screenSize.width / 2;
+    gameSpeed   = model.game.gameSpeed;
     hasLost     = false;
     deathScreen = null;
     tabToStart  = null;
@@ -226,7 +228,7 @@ class GameRoot extends Game {
     if (tileSize != null) {
       c.updateTileSize(tileSize);
     }
-    c.updateSpeed(model.game.gameSpeed);
+    c.updateSpeed(this.gameSpeed);
     c.onAdded();
   }
 
@@ -249,12 +251,14 @@ class GameRoot extends Game {
   }
 
   void _updateRunning(double t) {
-    player.posX = posX;
+    player.posX     = posX;
+    this.gameSpeed += t * model.game.gameSpeedup;
+    components.forEach((c) => c.updateSpeed(this.gameSpeed));
     components.forEach((c) => c.update(t));
     components.removeWhere((c) => c.destroy());
 
     bool wasHit = components.map((comp) => comp.intersect(player)).reduce((val, comp) => val || comp);
-    rowDebugText?.text = 'Comp: ${components.length}; Rows: ${rows.components.length}; HIT: $wasHit';
+    rowDebugText?.text = 'Comp: ${components.length}; Rows: ${rows.components.length}; Speed: ${gameSpeed.round()}; HIT: $wasHit';
 
     if (model.game.renderHitBox) {
       player.hitBoxColor = wasHit ? Color(0xffffffff) : Color(0xffffff00);
