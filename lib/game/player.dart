@@ -10,6 +10,9 @@ import 'package:game_one/game/components/animation.dart';
 class Player extends MetaComp {
   final DataModel model;
 
+  double _destPosX;
+  double _posX;
+
   Animation runningAnimation;
 
   Player({@required this.model}) {
@@ -30,22 +33,40 @@ class Player extends MetaComp {
     components.clear();
   }
 
-  set posX(double x) {
-    this.x      = x - this.width / 2;
-    double hw   = (tileSize ?? 16) / 1.75;
-    double ofs  = (this.width  / 2 - hw / 2);
-    this.hitBox = Rect.fromLTWH(this.x + ofs, this.y + ofs, hw, hw);
-  }
+  set posX(double x) => this._destPosX = x;
 
   @override
   void resize(Size s) {
     super.resize(s);
     this.y = s.height / model.game.playerRelPos;
+
+    this._destPosX = s.width / 2;
+    this._posX     = this._destPosX;
   }
 
   @override
   void update(double t) {
     super.update(t);
+
+    double maxDeltaX = t * model.game.maxPlayerSpeed;
+    if (this._posX < this._destPosX) {
+      if ((this._destPosX - this._posX) > maxDeltaX) {
+        this._posX += maxDeltaX;
+      } else {
+        this._posX = this._destPosX;
+      }
+    } else if (this._posX > this._destPosX) {
+      if ((this._posX - this._destPosX) > maxDeltaX) {
+        this._posX -= maxDeltaX;
+      } else {
+        this._posX = this._destPosX;
+      }
+    }
+
+    this.x      = this._posX - this.width / 2;
+    double hw   = (tileSize ?? 16) / 1.75;
+    double ofs  = (this.width  / 2 - hw / 2);
+    this.hitBox = Rect.fromLTWH(this.x + ofs, this.y + ofs, hw, hw);
   }
 
   @override

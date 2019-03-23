@@ -42,6 +42,7 @@ class GameSettingsModel {
 
   double playerRelPos;
   double gameSpeed;
+  double maxPlayerSpeed;
   int    numTiles;
   bool   debugText;
   bool   renderHitBox;
@@ -51,33 +52,36 @@ class GameSettingsModel {
   GameSettingsModel() { reset(); }
 
   void load(SharedPreferences prefs) async {
-    playerRelPos = prefs.getDouble( PREFIX + 'playerRelPos' ) ?? playerRelPos;
-    gameSpeed    = prefs.getDouble( PREFIX + 'gameSpeed'    ) ?? gameSpeed;
-    numTiles     = prefs.getInt(    PREFIX + 'numTiles'     ) ?? numTiles;
-    debugText    = prefs.getBool(   PREFIX + 'debugText'    ) ?? debugText;
-    renderHitBox = prefs.getBool(   PREFIX + 'renderHitBox' ) ?? renderHitBox;
-    immortal     = prefs.getBool(   PREFIX + 'immortal'     ) ?? immortal;
-    drawLines    = prefs.getBool(   PREFIX + 'drawLines'    ) ?? drawLines;
+    playerRelPos   = prefs.getDouble( PREFIX + 'playerRelPos'   ) ?? playerRelPos;
+    gameSpeed      = prefs.getDouble( PREFIX + 'gameSpeed'      ) ?? gameSpeed;
+    maxPlayerSpeed = prefs.getDouble( PREFIX + 'maxPlayerSpeed' ) ?? maxPlayerSpeed;
+    numTiles       = prefs.getInt(    PREFIX + 'numTiles'       ) ?? numTiles;
+    debugText      = prefs.getBool(   PREFIX + 'debugText'      ) ?? debugText;
+    renderHitBox   = prefs.getBool(   PREFIX + 'renderHitBox'   ) ?? renderHitBox;
+    immortal       = prefs.getBool(   PREFIX + 'immortal'       ) ?? immortal;
+    drawLines      = prefs.getBool(   PREFIX + 'drawLines'      ) ?? drawLines;
   }
 
   void save(SharedPreferences prefs) async {
-    await prefs.setDouble( PREFIX + 'playerRelPos', playerRelPos );
-    await prefs.setDouble( PREFIX + 'gameSpeed',    gameSpeed    );
-    await prefs.setInt(    PREFIX + 'numTiles',     numTiles     );
-    await prefs.setBool(   PREFIX + 'debugText',    debugText    );
-    await prefs.setBool(   PREFIX + 'renderHitBox', renderHitBox );
-    await prefs.setBool(   PREFIX + 'immortal',     immortal     );
-    await prefs.setBool(   PREFIX + 'drawLines',    drawLines    );
+    await prefs.setDouble( PREFIX + 'playerRelPos',   playerRelPos   );
+    await prefs.setDouble( PREFIX + 'gameSpeed',      gameSpeed      );
+    await prefs.setDouble( PREFIX + 'maxPlayerSpeed', maxPlayerSpeed );
+    await prefs.setInt(    PREFIX + 'numTiles',       numTiles       );
+    await prefs.setBool(   PREFIX + 'debugText',      debugText      );
+    await prefs.setBool(   PREFIX + 'renderHitBox',   renderHitBox   );
+    await prefs.setBool(   PREFIX + 'immortal',       immortal       );
+    await prefs.setBool(   PREFIX + 'drawLines',      drawLines      );
   }
 
   void reset() {
-    playerRelPos = 1.3;
-    gameSpeed    = 200;
-    numTiles     = 6;
-    debugText    = false;
-    renderHitBox = false;
-    immortal     = false;
-    drawLines    = false;
+    playerRelPos   = 1.3;
+    gameSpeed      = 200;
+    maxPlayerSpeed = 300;
+    numTiles       = 6;
+    debugText      = false;
+    renderHitBox   = false;
+    immortal       = false;
+    drawLines      = false;
   }
 }
 
