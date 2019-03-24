@@ -22,7 +22,7 @@ class AnimationDataModel {
     tap2restart = prefs.getDouble( PREFIX + 'tap2restart' ) ?? tap2restart;
   }
 
-  void save(SharedPreferences prefs) async {
+  Future<void> save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerSpeed', playerSpeed );
     await prefs.setDouble( PREFIX + 'explSpeed',   explSpeed );
     await prefs.setDouble( PREFIX + 'wallSpeed',   wallSpeed );
@@ -58,7 +58,7 @@ class GameSettingsModel {
 
   GameSettingsModel() { reset(); }
 
-  void load(SharedPreferences prefs) async {
+  void load(SharedPreferences prefs) {
     playerRelPos   = prefs.getDouble( PREFIX + 'playerRelPos'   ) ?? playerRelPos;
     gameSpeed      = prefs.getDouble( PREFIX + 'gameSpeed'      ) ?? gameSpeed;
     gameSpeedup    = prefs.getDouble( PREFIX + 'gameSpeedup'    ) ?? gameSpeedup;
@@ -72,7 +72,7 @@ class GameSettingsModel {
     drawLines      = prefs.getBool(   PREFIX + 'drawLines'      ) ?? drawLines;
   }
 
-  void save(SharedPreferences prefs) async {
+  Future<void> save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerRelPos',   playerRelPos   );
     await prefs.setDouble( PREFIX + 'gameSpeed',      gameSpeed      );
     await prefs.setDouble( PREFIX + 'gameSpeedup',    gameSpeedup    );
@@ -119,7 +119,7 @@ class GeneratorModel {
 
   GeneratorModel() { reset(); }
 
-  void load(SharedPreferences prefs) async {
+  void load(SharedPreferences prefs) {
     minObstacleGap    = prefs.getInt( PREFIX + 'minObstacleGap'    ) ?? minObstacleGap;
     maxObstacleGap    = prefs.getInt( PREFIX + 'maxObstacleGap'    ) ?? maxObstacleGap;
 
@@ -134,7 +134,7 @@ class GeneratorModel {
     maxBlockWidth     = prefs.getInt( PREFIX + 'maxBlockWidth'     ) ?? maxBlockWidth;
   }
 
-  void save(SharedPreferences prefs) async {
+  Future<void> save(SharedPreferences prefs) async {
     await prefs.setInt( PREFIX + 'minObstacleGap',    minObstacleGap    );
     await prefs.setInt( PREFIX + 'maxObstacleGap',    maxObstacleGap    );
 
@@ -185,6 +185,7 @@ class DataModel extends Model {
 
     _animationData.load(prefs);
     _gameSettings.load(prefs);
+    _gnererator.load(prefs);
 
     print('MODEL: LOADED');
     notifyListeners();
@@ -193,8 +194,9 @@ class DataModel extends Model {
   void save() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    _animationData.save(prefs);
-    _gameSettings.save(prefs);
+    await _animationData.save(prefs);
+    await _gameSettings.save(prefs);
+    await _gnererator.save(prefs);
 
     print('MODEL: SAVED');
     notifyListeners();

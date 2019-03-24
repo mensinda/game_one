@@ -197,6 +197,8 @@ class GameBluetooth extends Model {
       return [];
     }
 
+    print('BLE: SCANNING...');
+
     _isScanning = true;
     _setState(await ble.state);
 
@@ -250,3 +252,4 @@ class GameBluetooth extends Model {
     ble.onStateChanged().forEach((BluetoothState s) => _setState(s));
   }
 }
+

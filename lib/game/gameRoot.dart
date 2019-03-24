@@ -10,6 +10,7 @@ import 'package:ordered_set/ordered_set.dart';
 import 'package:ordered_set/comparing.dart';
 
 import 'package:game_one/main.dart';
+import 'package:game_one/bluetooth.dart';
 import 'package:game_one/model.dart';
 import 'package:game_one/game/player.dart';
 import 'package:game_one/game/rowGenerator.dart';
@@ -25,6 +26,7 @@ typedef void GameIsInit();
 
 class GameRoot extends Game {
   final DataModel model;
+  final GameBluetooth bleModel;
 
   Random rand;
   Size screenSize;
@@ -46,7 +48,7 @@ class GameRoot extends Game {
 
   OrderedSet<BaseComp> components = OrderedSet(Comparing.on((c) => c.priority()));
 
-  GameRoot({@required this.model});
+  GameRoot({@required this.model, @required this.bleModel});
 
   void init() async {
     navigatorKey.currentState.pushNamed('/loading');
@@ -89,6 +91,14 @@ class GameRoot extends Game {
       'cogwheel.png',
     ]);
 
+    List<GameBluetoothDev> devList = await bleModel.scan();
+    for (GameBluetoothDev i in devList) {
+      if (i.name.contains('TECO Wearable')) {
+        await bleModel.connect(i);
+        break;
+      }
+    }
+
     model.setLoaded();
     reset();
     print('GAME: INITIALIZED');
@@ -99,6 +109,11 @@ class GameRoot extends Game {
   void reset() {
     if (!model.hasLoaded) {
       return;
+    }
+
+    if ((bleModel.conDev?.isConnected ?? false) == true) {
+      bleModel.conDev.motors = [bleModel.conDev.startupMotorVal, bleModel.conDev.startupMotorVal, bleModel.conDev.startupMotorVal, bleModel.conDev.startupMotorVal];
+      model.save();
     }
 
     posX        = screenSize.width / 2;

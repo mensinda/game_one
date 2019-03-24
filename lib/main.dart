@@ -24,7 +24,7 @@ void main() async {
 
   DataModel     model    = DataModel();
   GameBluetooth bleModel = GameBluetooth();
-  GameRoot game = GameRoot(model: model);
+  GameRoot game = GameRoot(model: model, bleModel: bleModel);
   runApp(AppRoot(game: game, model: model, bleModel: bleModel));
 
   model.load();
