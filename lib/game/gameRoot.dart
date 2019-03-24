@@ -56,6 +56,7 @@ class GameRoot extends Game {
 
     await Flame.images.loadAll(<String>[
       'flame.png',
+      'explosion.png',
       'ground-0.png',
       'ground-1.png',
       'ground-2.png',
@@ -76,10 +77,7 @@ class GameRoot extends Game {
       'edge-BR.png',
       'edge-TL.png',
       'edge-TR.png',
-      'block-0.png',
-      'block-1.png',
-      'block-2.png',
-      'block-3.png',
+      'block.png',
       'death-screen-10.png',
       'death-screen-20.png',
       'death-screen-30.png',

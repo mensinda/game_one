@@ -31,6 +31,16 @@ class Player extends MetaComp {
 
   void die() {
     components.clear();
+    runningAnimation = Animation.sequenced(
+      'explosion.png',
+      11,
+      textureWidth: 256,
+      textureHeight: 256,
+      stepTime: model.animation.explSpeed
+    );
+    runningAnimation.loop = false;
+
+    add(GameAnimation.square(2, runningAnimation));
   }
 
   set posX(double x) => this._destPosX = x;

@@ -91,7 +91,7 @@ class GameRow extends MetaComp {
   }
 
   void _generateBlock(int tileIdx, double offset) {
-    GameSprite sp = GameSprite.square(1, 'block-${this.rand.nextInt(4)}.png');
+    GameSprite sp = GameSprite.square(1, 'block.png');
     add(sp);
     sp.x            = tileIdx * tileSize + offset;
     sp.y            = 0;

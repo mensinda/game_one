@@ -5,6 +5,7 @@ class AnimationDataModel {
   static const String PREFIX = 'animation/';
 
   double playerSpeed;
+  double explSpeed;
   double wallSpeed;
   double wallPause;
   double deathScreen;
@@ -14,6 +15,7 @@ class AnimationDataModel {
 
   void load(SharedPreferences prefs) async {
     playerSpeed = prefs.getDouble( PREFIX + 'playerSpeed' ) ?? playerSpeed;
+    explSpeed   = prefs.getDouble( PREFIX + 'explSpeed'   ) ?? explSpeed;
     wallSpeed   = prefs.getDouble( PREFIX + 'wallSpeed'   ) ?? wallSpeed;
     wallPause   = prefs.getDouble( PREFIX + 'wallPause'   ) ?? wallPause;
     deathScreen = prefs.getDouble( PREFIX + 'deathScreen' ) ?? deathScreen;
@@ -22,6 +24,7 @@ class AnimationDataModel {
 
   void save(SharedPreferences prefs) async {
     await prefs.setDouble( PREFIX + 'playerSpeed', playerSpeed );
+    await prefs.setDouble( PREFIX + 'explSpeed',   explSpeed );
     await prefs.setDouble( PREFIX + 'wallSpeed',   wallSpeed );
     await prefs.setDouble( PREFIX + 'wallPause',   wallPause );
     await prefs.setDouble( PREFIX + 'deathScreen', deathScreen );
@@ -29,11 +32,12 @@ class AnimationDataModel {
   }
 
   void reset() {
-    playerSpeed = 0.10;
-    wallSpeed   = 0.05;
-    wallPause   = 0.40;
-    deathScreen = 0.09;
-    tap2restart = 1.00;
+    playerSpeed = 0.100;
+    explSpeed   = 0.075;
+    wallSpeed   = 0.050;
+    wallPause   = 0.400;
+    deathScreen = 0.090;
+    tap2restart = 1.000;
   }
 }
 

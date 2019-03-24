@@ -39,6 +39,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/flame.png
+    - assets/images/explosion.png
     - assets/images/ground-0.png
     - assets/images/ground-1.png
     - assets/images/ground-2.png
@@ -59,10 +60,7 @@ flutter:
     - assets/images/edge-TL.png
     - assets/images/edge-TR.png
     - assets/images/wall-2-D.png
-    - assets/images/block-0.png
-    - assets/images/block-1.png
-    - assets/images/block-2.png
-    - assets/images/block-3.png
+    - assets/images/block.png
     - assets/images/death-screen-10.png
     - assets/images/death-screen-20.png
     - assets/images/death-screen-30.png

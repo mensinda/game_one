@@ -29,6 +29,14 @@ class _SettingsState extends State<Settings> {
                 ),
 
                 CardSettingsSlider(
+                  label: 'Explosion',
+                  initialValue: model.animation.explSpeed,
+                  min: 0.01,
+                  max: 0.25,
+                  onChangedEnd: (val) => model.animation.explSpeed = val
+                ),
+
+                CardSettingsSlider(
                   label: 'Wall',
                   initialValue: model.animation.wallSpeed,
                   min: 0.01,
