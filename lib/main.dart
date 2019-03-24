@@ -11,6 +11,7 @@ import 'package:game_one/bluetooth.dart';
 import 'package:game_one/game/gameRoot.dart';
 import 'package:game_one/tabs/settings.dart';
 import 'package:game_one/tabs/bluetooth.dart';
+import 'package:game_one/tabs/device.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -154,6 +155,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                   tabs: <Tab>[
                     Tab(icon: Icon(Icons.settings)),
                     Tab(icon: model.bluetoothIcon),
+                    Tab(icon: Icon(Icons.settings_ethernet)),
                   ],
                 ),
             ),
@@ -162,7 +164,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
             controller: controller,
             children: <Widget>[
               Settings(),
-              Bluetooth()
+              Bluetooth(),
+              DeviceSettings(),
             ]
           )
         )

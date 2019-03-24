@@ -32,7 +32,7 @@ class TileCfg {
 
   TileCfg({this.d, this.w, this.h, this.o});
 
-  String get sprite  => 'wall-$rand-$d.png';
+  String get sprite  => ['U'].contains(d) ? 'wall-$d.png' : 'wall-$rand-$d.png';
   double get width   => this.w * 32 * 4;
   double get height  => this.h * 32 * 4;
   double get offsetX => this.w < 1.0 ? this.o * tileSize : 0.0;

@@ -61,9 +61,10 @@ class _BluetoothState extends State<Bluetooth> {
       tiles.add(
         Card(
           child: ListTile(
-            title: Text(i.name),
-            subtitle: Text(i.id),
-            onTap: () => model.connect(i),
+            title:       Text(i.name),
+            subtitle:    Text(i.id),
+            onTap:       () => model.connect(i),
+            onLongPress: () => model.disconnect(),
             leading: Icon(
               i.icon,
               size: 48,
