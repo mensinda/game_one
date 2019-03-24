@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:game_one/model.dart';
+import 'package:game_one/bluetooth.dart';
 import 'package:game_one/game/gameRoot.dart';
 import 'package:game_one/tabs/settings.dart';
 import 'package:game_one/tabs/bluetooth.dart';
@@ -20,21 +21,29 @@ void main() async {
   await flameUtil.fullScreen();
   await flameUtil.setOrientation(DeviceOrientation.portraitUp);
 
-  DataModel model = DataModel();
+  DataModel     model    = DataModel();
+  GameBluetooth bleModel = GameBluetooth();
   GameRoot game = GameRoot(model: model);
-  runApp(AppRoot(game: game, model: model));
+  runApp(AppRoot(game: game, model: model, bleModel: bleModel));
 
   model.load();
   game.init();
 }
 
 class AppRoot extends StatelessWidget {
-  final GameRoot game;
-  final DataModel model;
-  AppRoot({this.game, this.model});
+  final GameRoot      game;
+  final DataModel     model;
+  final GameBluetooth bleModel;
+  AppRoot({this.game, this.model, this.bleModel});
 
   @override
-  Widget build(BuildContext context) => ScopedModel<DataModel>(model: model, child: _buildApp());
+  Widget build(BuildContext context) => ScopedModel<DataModel>(
+    model: model,
+    child: ScopedModel<GameBluetooth>(
+      model: bleModel,
+      child: _buildApp()
+    )
+  );
 
   Widget _buildApp() {
     return MaterialApp(
@@ -121,7 +130,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 3, vsync: this);
+    controller    = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -132,28 +141,31 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.blue,
+    return ScopedModelDescendant<GameBluetooth>(
+      builder: (context, child, model) =>
+        Scaffold(
+          appBar: AppBar(
+            title: Text(widget.title),
+            backgroundColor: Colors.blue,
 
-        // Set the bottom property of the Appbar to include a Tab Bar
-        bottom: TabBar(
-          controller: controller,
-          tabs: <Tab>[
-            Tab(icon: Icon(Icons.settings)),
-            Tab(icon: Icon(Icons.settings_bluetooth)),
-          ],
-        ),
-      ),
+            // Set the bottom property of the Appbar to include a Tab Bar
+            bottom: TabBar(
+                  controller: controller,
+                  tabs: <Tab>[
+                    Tab(icon: Icon(Icons.settings)),
+                    Tab(icon: model.bluetoothIcon),
+                  ],
+                ),
+            ),
 
-      body: TabBarView(
-        controller: controller,
-        children: <Widget>[
-          Settings(),
-          Bluetooth()
-        ]
-      )
+          body: TabBarView(
+            controller: controller,
+            children: <Widget>[
+              Settings(),
+              Bluetooth()
+            ]
+          )
+        )
     );
   }
 }

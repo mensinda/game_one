@@ -18,7 +18,7 @@ class Player extends MetaComp {
   Player({@required this.model}) {
     runningAnimation = Animation.sequenced(
       'flame.png',
-      5,
+      4,
       textureWidth: 128,
       textureHeight: 128,
       stepTime: model.animation.playerSpeed

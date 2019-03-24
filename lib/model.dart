@@ -29,7 +29,7 @@ class AnimationDataModel {
   }
 
   void reset() {
-    playerSpeed = 0.05;
+    playerSpeed = 0.10;
     wallSpeed   = 0.05;
     wallPause   = 0.40;
     deathScreen = 0.09;
