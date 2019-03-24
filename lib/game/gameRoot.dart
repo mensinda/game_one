@@ -4,10 +4,12 @@ import 'package:meta/meta.dart';
 
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/position.dart';
 import 'package:flame/text_config.dart';
 
 import 'package:ordered_set/ordered_set.dart';
 import 'package:ordered_set/comparing.dart';
+import 'package:vector_math/vector_math.dart';
 
 import 'package:game_one/main.dart';
 import 'package:game_one/bluetooth.dart';
@@ -42,6 +44,7 @@ class GameRoot extends Game {
   TabToStart   tabToStart;
   Paused       pausedText;
   GameText     rowDebugText;
+  GameText     rowDebugText2;
   GameSettings settings;
 
   GameIsInit onInit = () {};
@@ -131,10 +134,15 @@ class GameRoot extends Game {
     // Remove all components
     components.clear();
     if (model.game.debugText) {
-      rowDebugText = GameText('<N/A>');
+      rowDebugText  = GameText('<N/A>');
+      rowDebugText2 = GameText('<N/A>');
       add(rowDebugText);
-      rowDebugText.compPriority = 100;
-      rowDebugText.config = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
+      add(rowDebugText2);
+      rowDebugText.compPriority  = 100;
+      rowDebugText2.compPriority = 100;
+      rowDebugText.config  = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
+      rowDebugText2.config = TextConfig(fontSize: 12, color: Color(0xFFFFFFFF));
+      rowDebugText2.y = rowDebugText.height * 1.25;
     } else {
       rowDebugText = null;
     }
@@ -266,6 +274,7 @@ class GameRoot extends Game {
       _updatePaused(t);
     } else {
       _updateRunning(t);
+      _updateWareable();
     }
   }
 
@@ -295,6 +304,30 @@ class GameRoot extends Game {
       deathScreen = YouDied(model: this.model);
       add(deathScreen);
     }
+  }
+
+  void _updateWareable() {
+    ObstacleInfo obs = rows.currentObstacle;
+    Rect         ply = player.toRect();
+
+    if (obs?.middle == null) {
+      return;
+    }
+
+    Vector2 dir = Vector2(obs.middle - ply.center.dx, ply.center.dy - obs.posY);
+    double dist = dir.length;
+    dir.scale(1 / dist);
+
+    double up    = dir.dot(Vector2(0,  1));
+    double left  = dir.dot(Vector2(-1, 0));
+    double right = dir.dot(Vector2(1,  0));
+
+    bleModel.conDev?.frontRel = up;
+    bleModel.conDev?.leftRel  = - (obs.middle - ply.center.dx) / (screenSize.width * 0.33);
+    bleModel.conDev?.rightRel =   (obs.middle - ply.center.dx) / (screenSize.width * 0.33);
+    bleModel.conDev?.backRel  = obs.left != null ? 1 : 0;
+
+    rowDebugText2?.text = 'LN: ${dist.floor()}; L: ${(left * 100).round()}; R: ${(right * 100).round()}; U: ${(up * 100).round()}';
   }
 
   void _updatePaused(double t) {

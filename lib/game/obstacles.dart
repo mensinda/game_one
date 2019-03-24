@@ -143,7 +143,11 @@ class NarrowCorridor extends Obstacle {
   }
 
   @override
-  ObstacleInfo get obstacleInfo => ObstacleInfo(left: (this.leftIDX + 0.5) * data.tileSize, right: (this.rightIDX + 0.5) * data.tileSize);
+  ObstacleInfo get obstacleInfo {
+    double left  = (this.leftIDX + 0.5) * data.tileSize;
+    double right = (this.rightIDX + 0.5) * data.tileSize;
+    return ObstacleInfo(left: left, right: right, middle: (left + right) / 2);
+  }
 }
 
 class SpikeWall extends Obstacle {

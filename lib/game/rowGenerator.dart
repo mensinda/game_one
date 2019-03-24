@@ -34,7 +34,7 @@ class RowGenerator extends MetaComp {
     obstaclesRowGen.add(WideCorridor(dataHelper));
 
     ObstacleInfo obsInfo = obs.obstacleInfo;
-    obsInfo.posY = posY + tileSize;
+    obsInfo.posY = posY + tileSize * 2;
     obstacles.add(obsInfo);
   }
 

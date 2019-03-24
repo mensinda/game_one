@@ -60,6 +60,11 @@ class GameBluetoothDev {
   set front(int val) => setMotor(_motorMap[MotorLoc.FRONT], val);
   set back(int val)  => setMotor(_motorMap[MotorLoc.BACK],  val);
 
+  set leftRel(double val)  => left  = ((0xFF - minMotorVal) * max(0, min(1, val))).round() + minMotorVal;
+  set rightRel(double val) => right = ((0xFF - minMotorVal) * max(0, min(1, val))).round() + minMotorVal;
+  set frontRel(double val) => front = ((0xFF - minMotorVal) * max(0, min(1, val))).round() + minMotorVal;
+  set backRel(double val)  => back  = ((0xFF - minMotorVal) * max(0, min(1, val))).round() + minMotorVal;
+
   int  getMapping(MotorLoc m) => _motorMap[m];
   void setMapping(MotorLoc m, int index) => _motorMap[m] = max(0, min(index ?? 0, 3));
 
