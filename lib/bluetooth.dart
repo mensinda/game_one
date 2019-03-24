@@ -73,7 +73,11 @@ class GameBluetoothDev {
       await Future.delayed(Duration(milliseconds: (1000 / (updateFrequency ?? 2)).floor()));
       if (_motorControl == null) { continue; }
       print('BLE: UPDATE $_current');
-      await dev.writeCharacteristic(_motorControl, _current);
+
+      try {
+        await dev.writeCharacteristic(_motorControl, _current);
+      } catch (e) {
+      }
     }
   }
 
