@@ -40,10 +40,7 @@ flutter:
   assets:
     - assets/images/flame.png
     - assets/images/explosion.png
-    - assets/images/ground-0.png
-    - assets/images/ground-1.png
-    - assets/images/ground-2.png
-    - assets/images/ground-3.png
+    - assets/images/ground.png
     - assets/images/wall-0-L.png
     - assets/images/wall-1-L.png
     - assets/images/wall-2-L.png

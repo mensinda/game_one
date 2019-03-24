@@ -57,10 +57,7 @@ class GameRoot extends Game {
     await Flame.images.loadAll(<String>[
       'flame.png',
       'explosion.png',
-      'ground-0.png',
-      'ground-1.png',
-      'ground-2.png',
-      'ground-3.png',
+      'ground.png',
       'wall-0-L.png',
       'wall-1-L.png',
       'wall-2-L.png',

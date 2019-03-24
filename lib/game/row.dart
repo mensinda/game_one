@@ -51,8 +51,7 @@ class GameRow extends MetaComp {
 
     // Generate the background tiles
     for (int i = 0; i < model.game.numTiles; i++) {
-      int tileIDX = rand.nextInt(4);
-      GameSprite sp = GameSprite.square(1, 'ground-$tileIDX.png');
+      GameSprite sp = GameSprite.square(1, 'ground.png');
       add(sp);
 
       sp.x = i * tileSize;
