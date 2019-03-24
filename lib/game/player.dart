@@ -76,7 +76,7 @@ class Player extends MetaComp {
     this.x      = this._posX - this.width / 2;
     double hw   = (tileSize ?? 16) / 1.75;
     double ofs  = (this.width  / 2 - hw / 2);
-    this.hitBox = Rect.fromLTWH(this.x + ofs, this.y + ofs, hw, hw);
+    this.hitBox = Rect.fromLTWH(this.x + ofs, this.y + ofs * 0.25, hw, hw);
   }
 
   @override

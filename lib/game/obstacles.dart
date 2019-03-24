@@ -115,13 +115,15 @@ class NarrowCorridor extends Obstacle {
     tiles.fillRange(this.rightIDX + 1, data.width,   tile);
 
     if (this.leftIDX > data.leftIDX) {
-      tiles[data.leftIDX] = this.isFirst ? TileType.edgeBR : TileType.edgeTR;
+      tiles[data.leftIDX] = this.isFirst ? TileType.edgeBR   : TileType.edgeTR;
+      tiles[this.leftIDX] = this.isFirst ? TileType.cornerBR : TileType.cornerTR;
     } else {
       tiles[data.leftIDX] = TileType.borderL;
     }
 
     if (this.rightIDX < data.rightIDX) {
-      tiles[data.rightIDX] = this.isFirst ? TileType.edgeBL : TileType.edgeTL;
+      tiles[data.rightIDX] = this.isFirst ? TileType.edgeBL   : TileType.edgeTL;
+      tiles[this.rightIDX] = this.isFirst ? TileType.cornerBL : TileType.cornerTL;
     } else {
       tiles[data.rightIDX] = TileType.borderR;
     }
@@ -170,11 +172,11 @@ class SpikeWall extends Obstacle {
   @override
   List<TileType> nextVariableLayer() {
     if (this.isFirst) {
-      return <TileType>[TileType.empty, TileType.borderD, TileType.empty];
+      return <TileType>[TileType.cornerBL, TileType.borderD, TileType.cornerBR];
     }
 
     if (this.isLast) {
-      return <TileType>[TileType.empty, TileType.borderU, TileType.empty];
+      return <TileType>[TileType.cornerTL, TileType.borderU, TileType.cornerTR];
     }
 
     return <TileType>[TileType.borderR, TileType.block, TileType.borderL];

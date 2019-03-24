@@ -17,6 +17,10 @@ enum TileType {
   edgeBR,
   edgeTL,
   edgeTR,
+  cornerBL,
+  cornerBR,
+  cornerTL,
+  cornerTR,
   block,
   empty
 }
@@ -27,12 +31,11 @@ class TileCfg {
   double h;
   double o;
 
-  int    rand;
   double tileSize;
 
   TileCfg({this.d, this.w, this.h, this.o});
 
-  String get sprite  => ['U'].contains(d) ? 'wall-$d.png' : 'wall-$rand-$d.png';
+  String get sprite  => 'wall-$d.png';
   double get width   => this.w * 32 * 4;
   double get height  => this.h * 32 * 4;
   double get offsetX => this.w < 1.0 ? this.o * tileSize : 0.0;
@@ -83,6 +86,10 @@ class GameRow extends MetaComp {
         case TileType.edgeBR:
         case TileType.edgeTL:
         case TileType.edgeTR: _generateEdge(current, i, offset); break;
+        case TileType.cornerBL:
+        case TileType.cornerBR:
+        case TileType.cornerTL:
+        case TileType.cornerTR: _generateCorner(current, i, offset); break;
         case TileType.empty:
         default: break;
       }
@@ -98,6 +105,26 @@ class GameRow extends MetaComp {
     sp.hitBox       = Rect.fromLTWH(sp.x, this.y, sp.width, sp.height);
   }
 
+  void _generateCorner(TileType current, int tileIdx, double offset) {
+    String tile;
+    double dx = 0;
+    double dy = 0;
+    switch (current) {
+      case TileType.cornerBL: tile = 'corner-BL.png'; dy = 0;  dx = .5; break;
+      case TileType.cornerBR: tile = 'corner-BR.png'; dy = 0;  dx = 0;  break;
+      case TileType.cornerTL: tile = 'corner-TL.png'; dy = .5; dx = .5; break;
+      case TileType.cornerTR: tile = 'corner-TR.png'; dy = .5; dx = 0;  break;
+      default: return;
+    }
+
+    GameSprite sp = GameSprite.square(0.5, tile);
+    add(sp);
+    sp.x            = (tileIdx + dx) * tileSize + offset;
+    sp.y            = dy * tileSize;
+    sp.compPriority = 5;
+    sp.hitBox       = Rect.fromLTWH(sp.x + .5 * dx * tileSize, this.y + sp.y + .5 * dy * tileSize, sp.width * .5, sp.height * .5);
+  }
+
   void _generateBorder(TileType current, int tileIdx, double offset) {
     TileCfg tile;
     switch (current) {
@@ -108,7 +135,6 @@ class GameRow extends MetaComp {
       default: return;
     }
 
-    tile.rand     = this.rand.nextInt(3);
     tile.tileSize = this.tileSize;
 
     Animation ani = Animation.variableSequenced(
